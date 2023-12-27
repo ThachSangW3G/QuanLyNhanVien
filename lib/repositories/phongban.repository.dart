@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanlynhanvien/models/phongban.model.dart';
 
-abstract class PhongBanRepositoryAbs {
+abstract class PhongBanRepository {
   Future<void> addPhongBan(PhongBan phongBan);
   Future<List<PhongBan>> getAllPhongBan();
   Future<PhongBan> getPhongBan(String maPB);
@@ -9,7 +9,7 @@ abstract class PhongBanRepositoryAbs {
   Future<void> updPhongBan(PhongBan phongBan);
 }
 
-class PhongBanRepository implements PhongBanRepositoryAbs {
+class PhongBanRepositoryImpl implements PhongBanRepository {
   CollectionReference phongBans =
       FirebaseFirestore.instance.collection('PhongBans');
 

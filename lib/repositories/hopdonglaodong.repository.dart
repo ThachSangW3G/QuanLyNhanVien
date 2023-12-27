@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanlynhanvien/models/hopdonglaodong.model.dart';
 
-abstract class HopDongLaoDongRepositoryAbs {
+abstract class HopDongLaoDongRepository {
   Future<void> addHopDongLapDong(HopDongLaoDong hopDongLaoDong);
   Future<List<HopDongLaoDong>> getAllHopDongLaoDong();
   Future<HopDongLaoDong> getHopDongLaoDong(String maHD);
@@ -9,7 +9,7 @@ abstract class HopDongLaoDongRepositoryAbs {
   Future<void> updHopDongLaoDong(HopDongLaoDong hopDongLaoDong);
 }
 
-class HopDongLaoDongRepository implements HopDongLaoDongRepositoryAbs {
+class HopDongLaoDongRepositoryImpl implements HopDongLaoDongRepository {
   CollectionReference hopDongLaoDongs =
       FirebaseFirestore.instance.collection('HopDongLaoDongs');
 

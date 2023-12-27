@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
 
-abstract class KhenThuongRepositoryAbs {
+abstract class KhenThuongRepository {
   Future<void> addKhenThuong(KhenThuong khenThuong);
   Future<List<KhenThuong>> getAllKhenThuong();
   Future<KhenThuong> getKhenThuong(String maKT);
@@ -9,7 +9,7 @@ abstract class KhenThuongRepositoryAbs {
   Future<void> updKhenThuong(KhenThuong khenThuong);
 }
 
-class KhenThuongRepository implements KhenThuongRepositoryAbs {
+class KhenThuongRepositoryImpl implements KhenThuongRepository {
   CollectionReference khenThuongs =
       FirebaseFirestore.instance.collection('KhenThuongs');
 
