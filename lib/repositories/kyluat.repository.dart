@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanlynhanvien/models/kyluat.model.dart';
 
-abstract class KyLuatRepositoryAbs {
+abstract class KyLuatRepository {
   Future<void> addKyLuat(KyLuat kyLuat);
   Future<List<KyLuat>> getAllKyLuat();
   Future<KyLuat> getKyLuat(String maKL);
@@ -9,7 +9,7 @@ abstract class KyLuatRepositoryAbs {
   Future<void> updKyLuat(KyLuat kyLuat);
 }
 
-class KyLuatRepository implements KyLuatRepositoryAbs {
+class KyLuatRepositoryImpl implements KyLuatRepository {
   CollectionReference kyLuats =
       FirebaseFirestore.instance.collection('KyLuats');
 

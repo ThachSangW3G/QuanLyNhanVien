@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quanlynhanvien/models/chucvu.model.dart';
 
-abstract class ChucVuTRepositoryAbs {
+abstract class ChucVuRepository {
   Future<void> addChucVu(ChucVu chucVu);
   Future<List<ChucVu>> getAllChucVu();
   Future<ChucVu> getChucVu(String maCV);
@@ -9,7 +9,7 @@ abstract class ChucVuTRepositoryAbs {
   Future<void> updChucVu(ChucVu chucVu);
 }
 
-class ChucVuRepository implements ChucVuTRepositoryAbs {
+class ChucVuRepositoryImpl implements ChucVuRepository {
   CollectionReference chucVus =
       FirebaseFirestore.instance.collection('ChucVus');
 
