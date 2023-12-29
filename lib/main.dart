@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
+import 'package:quanlynhanvien/screens/manager_staff_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const ManagerStaffScreen(),
     );
   }
 }
