@@ -6,10 +6,12 @@ class ButtonComponent extends StatefulWidget {
   final IconData? iconDataEnd;
   final String title;
   final bool check;
+  final VoidCallback onPressed;
   const ButtonComponent(
       {super.key,
       this.iconDataStart,
       this.iconDataEnd,
+      required this.onPressed,
       required this.title,
       required this.check});
 
@@ -23,14 +25,18 @@ class _ButtonComponentState extends State<ButtonComponent> {
     return Padding(
       padding: widget.iconDataStart == null
           ? const EdgeInsets.all(2)
-          : const EdgeInsets.all(6),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: widget.check
-              ? const Color.fromARGB(255, 94, 116, 149)
+          : const EdgeInsets.all(5),
+      child: ElevatedButton(
+        onPressed: widget.onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: widget.check
+              ? const Color.fromARGB(255, 86, 65, 43)
               : AppColors.bluedarkColor,
-          borderRadius: BorderRadius.circular(8),
+          padding: const EdgeInsets.only(
+              left: 12,
+              right: 12,
+              top: 20,
+              bottom: 20), // Khoảng cách giữa các phần tử trong nút
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,13 +46,13 @@ class _ButtonComponentState extends State<ButtonComponent> {
               color: Colors.white,
             ), // Biểu tượng
             const SizedBox(
-                width: 8.0), // Khoảng cách giữa biểu tượng và tiêu đề
+                width: 6.0), // Khoảng cách giữa biểu tượng và tiêu đề
             Text(
               widget.title,
               style: const TextStyle(color: Colors.white),
             ), // Tiêu đề
             const SizedBox(
-                width: 8.0), // Khoảng cách giữa tiêu đề và biểu tượng
+                width: 6.0), // Khoảng cách giữa tiêu đề và biểu tượng
             Icon(
               widget.iconDataEnd,
               color: Colors.white,
