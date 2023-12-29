@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   shape: BoxShape.rectangle,
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       height: 100,
@@ -52,16 +53,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               image: AssetImage('assets/images/logo.png'),
                               fit: BoxFit.contain)),
                     ),
-                    Expanded(
-                      // height: 300,
-                      // width: 200,
-                      // decoration: const BoxDecoration(
-                      //     shape: BoxShape.rectangle,
-                      //     color: AppColors.appButtonColor),
+                    Container(
+                      height: 300,
+                      width: 2 * MediaQuery.of(context).size.width / 9,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        //color: AppColors.appButtonColor
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        padding: const EdgeInsets.only(left: 25, right: 25),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             const Text(
                               "Đăng Nhập",
