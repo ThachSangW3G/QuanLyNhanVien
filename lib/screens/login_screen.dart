@@ -128,33 +128,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: InkWell(
-                                onTap: () {
-                                  nguoiDungProvider.dangNhap(
-                                      _username!, _password!);
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.greyDark,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  alignment: Alignment.center,
-                                  child: const Text(
-                                    'ĐĂNG NHẬP',
-                                    style: TextStyle(
-                                        fontFamily: 'CeraPro',
-                                        fontSize: 16,
-                                        color: Colors.white),
-                                  ),
-                                )),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: InkWell(
+                                  onTap: () {
+                                    nguoiDungProvider.dangNhap(
+                                        _username!, _password!);
+                                  },
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: AppColors.greyDark,
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'ĐĂNG NHẬP',
+                                      style: TextStyle(
+                                          fontFamily: 'CeraPro',
+                                          fontSize: 16,
+                                          color: Colors.white),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               )
