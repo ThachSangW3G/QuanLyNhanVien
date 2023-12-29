@@ -38,11 +38,10 @@ class MyApp extends StatelessWidget {
         home: Consumer<NguoiDungProvider>(
           builder: (context, nguoiDungProvider, _) {
             final check = nguoiDungProvider.isLoggedIn;
-            final nguoiDung = nguoiDungProvider.nguoiDung!;
             return check
-                ? nguoiDung.loaiND == 'manager'
+                ? nguoiDungProvider.nguoiDung!.loaiND == 'manager'
                     ? const ManagerStaffScreen()
-                    : nguoiDung.loaiND == 'financial'
+                    : nguoiDungProvider.nguoiDung!.loaiND == 'financial'
                         ? const FinancialScreen()
                         : const StaffScreen()
                 : const LoginScreen();
