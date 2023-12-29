@@ -171,6 +171,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_toolbar:
+    dependency: "direct main"
+    description:
+      name: flutter_toolbar
+      sha256: "15821606951dce6fde2fdd62b5bf12eefb0036e8aef03bbca54f629a1a2431bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -332,7 +340,9 @@ packages:
       sha256: "5c2f730018264d276c20e4f1503fd1308dfbbae39ec8ee63c5236311ac06954b"
       url: "https://pub.dev"
     source: hosted
+
     version: "0.6.1"
+
   typed_data:
     dependency: transitive
     description:
@@ -390,5 +400,7 @@ packages:
     source: hosted
     version: "6.3.0"
 sdks:
+
   dart: ">=3.2.0-194.0.dev <4.0.0"
+
   flutter: ">=3.7.0-0"

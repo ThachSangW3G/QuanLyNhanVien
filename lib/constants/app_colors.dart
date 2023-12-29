@@ -14,6 +14,12 @@ class AppColors {
   static const Color groundRed = Color.fromRGBO(188, 91, 91, 1);
   static const Color black = Color.fromRGBO(0, 0, 0, 1);
 
+  static const Color bluedarkColor = Color.fromRGBO(42, 57, 80, 1);
+  static const Color blueColor = Color.fromRGBO(65, 67, 106, 1);
+  static const Color pinkdarkColor = Color.fromRGBO(151, 64, 99, 1);
+  static const Color pinklightColor = Color.fromRGBO(244, 70, 103, 1);
+  static const Color ograngeLight = Color.fromRGBO(255, 150, 120, 1);
+
   static const Color appPrimaryColor = Color(0xFF0A0E21);
   static const Color appCircleButtonColor = Colors.orangeAccent;
   static const Color appButtonColor = Color(0xFF4C4F5E);

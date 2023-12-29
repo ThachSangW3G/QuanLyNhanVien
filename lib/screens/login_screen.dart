@@ -26,8 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                height: 400,
-                width: 250,
+                height: 4 * MediaQuery.of(context).size.height / 5,
+                width: 2 * MediaQuery.of(context).size.width / 9,
                 decoration: const BoxDecoration(
                     shape: BoxShape.rectangle,
                     image: DecorationImage(
@@ -35,8 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.fill)),
               ),
               Container(
-                height: 400,
-                width: 300,
+                height: 4 * MediaQuery.of(context).size.height / 5,
+                width: 2 * MediaQuery.of(context).size.width / 9,
                 decoration: const BoxDecoration(
                   color: AppColors.whitePorcelain,
                   shape: BoxShape.rectangle,
@@ -52,92 +52,80 @@ class _LoginScreenState extends State<LoginScreen> {
                               image: AssetImage('assets/images/logo.png'),
                               fit: BoxFit.contain)),
                     ),
-                    Container(
-                      height: 300,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          FutureBuilder(
-                              future: ChucVuProvider()
-                                  .getChucVu('vc22GQtxZf9lQLLonBLd'),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else {
-                                  final chucVu = snapshot.data;
-                                  return Text(chucVu!.tenCV);
-                                }
-                              }),
-                          Text(context
-                              .watch<NguoiDungProvider>()
-                              .isLoggedIn
-                              .toString()),
-                          const Text(
-                            "Đăng Nhập",
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "CeraPro"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.greyIron),
-                              child: TextField(
-                                onChanged: (value) {
-                                  _username = value;
-                                },
-                                onTap: () {},
-                                decoration: const InputDecoration(
-                                  hintText: 'Tên đăng nhập',
-                                  hintStyle: TextStyle(
-                                      color: AppColors.greyShuttle,
-                                      fontFamily: 'CeraPro',
-                                      fontWeight: FontWeight.w400),
-                                  border: InputBorder.none,
+                    Expanded(
+                      // height: 300,
+                      // width: 200,
+                      // decoration: const BoxDecoration(
+                      //     shape: BoxShape.rectangle,
+                      //     color: AppColors.appButtonColor),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Đăng Nhập",
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "CeraPro"),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.greyIron),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    _username = value;
+                                  },
+                                  onTap: () {},
+                                  decoration: const InputDecoration(
+                                    hintText: 'Tên đăng nhập',
+                                    hintStyle: TextStyle(
+                                        color: AppColors.greyShuttle,
+                                        fontFamily: 'CeraPro',
+                                        fontWeight: FontWeight.w400),
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 10),
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.greyIron),
-                              child: TextField(
-                                onChanged: (value) {
-                                  _password = value;
-                                },
-                                onTap: () {},
-                                style: const TextStyle(
-                                    fontFamily: "CeraPro",
-                                    fontSize: 16,
-                                    color: AppColors.black),
-                                decoration: const InputDecoration(
-                                  hintText: 'Mật khẩu',
-                                  border: InputBorder.none,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 10),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.greyIron),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    _password = value;
+                                  },
+                                  onTap: () {},
+                                  style: const TextStyle(
+                                      fontFamily: "CeraPro",
+                                      fontSize: 16,
+                                      color: AppColors.black),
+                                  decoration: const InputDecoration(
+                                    hintText: 'Mật khẩu',
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {},
-                              splashColor: AppColors.blue,
-                              child: const Text(
-                                'Quên mật khẩu?',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: "CeraPro"),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: InkWell(
+                                onTap: () {},
+                                splashColor: AppColors.blue,
+                                child: const Text(
+                                  'Quên mật khẩu?',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: "CeraPro"),
+                                ),
                               ),
                             ),
                           ),
