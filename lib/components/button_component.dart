@@ -21,11 +21,11 @@ class _ButtonComponentState extends State<ButtonComponent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: widget.iconDataStart == null
+          ? const EdgeInsets.all(2)
+          : const EdgeInsets.all(6),
       child: Container(
-        padding: widget.iconDataStart == null
-            ? const EdgeInsets.all(0)
-            : const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: widget.check
               ? const Color.fromARGB(255, 94, 116, 149)

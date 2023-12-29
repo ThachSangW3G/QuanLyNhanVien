@@ -30,8 +30,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                 color: AppColors.blueColor,
                 child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
+                    ElevatedButton(
+                      onPressed: () {
                         setState(() {
                           tabs = 1;
                           check = false;
@@ -52,7 +52,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                         });
                       },
                       child: ButtonComponent(
-                        check: false,
+                        check: check,
                         iconDataStart: Icons.people,
                         iconDataEnd: check
                             ? Icons.keyboard_arrow_down
