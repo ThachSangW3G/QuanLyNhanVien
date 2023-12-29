@@ -172,6 +172,21 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                             });
                           },
                         ),
+                        ButtonComponent(
+                          check: tabs == 9,
+                          iconDataStart: Icons.person_add,
+                          iconDataEnd: tabs == 9
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Tạo tài khoản',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 9;
+                              checkStaff = false;
+                              checkKhenPhat = false;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
