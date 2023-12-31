@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/screens/staff_screen.dart';
+import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
 class ManagerStaffScreen extends StatefulWidget {
   const ManagerStaffScreen({super.key});
@@ -191,10 +193,13 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                     ),
                   ),
                 ),
-              ],
-            )
-          ],
-        ),
+
+              ),
+              const StaffWidget()
+            ],
+          )
+        ],
+
       ),
     );
   }

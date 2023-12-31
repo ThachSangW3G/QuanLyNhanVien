@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/chucvu.model.dart';
+import 'package:quanlynhanvien/providers/chucvu.provider.dart';
+import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final nguoiDungProvider = Provider.of<NguoiDungProvider>(context);
     return Scaffold(
         backgroundColor: AppColors.greyIron,
         body: Center(
@@ -128,7 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    nguoiDungProvider.dangNhap(
+                                        _username!, _password!);
+                                  },
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: 50,
