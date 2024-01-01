@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
@@ -136,6 +137,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onTap: () {
                                     nguoiDungProvider.dangNhap(
                                         _username!, _password!);
+
+                                    if (nguoiDungProvider.isLoggedIn) {
+                                      if (nguoiDungProvider.nguoiDung!.loaiND ==
+                                          'manager') {
+                                        Navigator.pushNamed(
+                                            context, '/managerStaff/Overview');
+                                      } else if (nguoiDungProvider
+                                              .nguoiDung!.loaiND ==
+                                          'financial') {
+                                        Navigator.pushNamed(
+                                            context, '/financial/Overview');
+                                      } else {
+                                        Navigator.pushNamed(
+                                            context, '/staff/Overview');
+                                      }
+                                    }
                                   },
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,

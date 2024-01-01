@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
 import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
+import 'package:quanlynhanvien/routes/routes.dart';
 import 'package:quanlynhanvien/screens/financial_staff_screen.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
 
@@ -21,41 +22,38 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => NguoiDungProvider()),
       ChangeNotifierProvider(create: (_) => ChucVuProvider())
     ],
-    child: const MyApp(),
+    child: MyApp(),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  final routerDelegate = BeamerDelegate(
-    locationBuilder: RoutesLocationBuilder(
-      routes: {
-           '/': (context, state, data) => LoginScreen(),
-           '/manager-staff': (context, state, data) => ManagerStaffScreen(),
-      }
-    )
-  );
+  MyApp({super.key}) {
+    Flurorouter.setUpRouter();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: Consumer<NguoiDungProvider>(
-          builder: (context, nguoiDungProvider, _) {
-            final check = nguoiDungProvider.isLoggedIn;
-            return check
-                ? nguoiDungProvider.nguoiDung!.loaiND == 'manager'
-                    ? const ManagerStaffScreen()
-                    : nguoiDungProvider.nguoiDung!.loaiND == 'financial'
-                        ? const FinancialScreen()
-                        : const StaffScreen()
-                : const LoginScreen();
-          },
-        ));
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      title: 'Flutter Demo',
+      onGenerateRoute: Flurorouter.router.generator,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      // home: Consumer<NguoiDungProvider>(
+      //   builder: (context, nguoiDungProvider, _) {
+      //     final check = nguoiDungProvider.isLoggedIn;
+      //     return check
+      //         ? nguoiDungProvider.nguoiDung!.loaiND == 'manager'
+      //             ? const ManagerStaffScreen()
+      //             : nguoiDungProvider.nguoiDung!.loaiND == 'financial'
+      //                 ? const FinancialScreen()
+      //                 : const StaffScreen()
+      //         : const LoginScreen();
+      //   },
+      // )
+    );
   }
 }
