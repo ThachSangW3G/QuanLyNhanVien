@@ -19,3 +19,42 @@ class PhongBan {
     return {'maPB': maPB, 'tenPB': tenPB, 'ngayThanhLap': ngayThanhLap};
   }
 }
+
+List<PhongBan> listPB = [
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+  PhongBan(
+      maPB: 'PB001',
+      tenPB: 'Tài chính',
+      ngayThanhLap: Timestamp.fromDate(DateTime.now())),
+];

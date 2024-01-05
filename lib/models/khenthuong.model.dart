@@ -1,24 +1,92 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class KhenThuong {
   final String maKT;
-  final String tenKT;
-  final int soTien;
-  final String ghiChu;
+  final String maNV;
+  final String maLKT;
+  final String moTa;
+  final Timestamp ngayKT;
 
   KhenThuong(
       {required this.maKT,
-      required this.tenKT,
-      required this.soTien,
-      required this.ghiChu});
+      required this.maNV,
+      required this.maLKT,
+      required this.moTa,
+      required this.ngayKT});
 
   factory KhenThuong.fromJson(Map<String, dynamic> json) {
     return KhenThuong(
         maKT: json['maKT'] ?? '',
-        tenKT: json['tenKT'] ?? '',
-        soTien: json['soTien'] ?? 0,
-        ghiChu: json['ghiChu'] ?? '');
+        maNV: json['maNV'] ?? '',
+        maLKT: json['maLKT'] ?? '',
+        moTa: json['moTa'] ?? '',
+        ngayKT: json['ngayKT']);
   }
 
   Map<String, dynamic> toJson() {
-    return {'maKT': maKT, 'tenKT': tenKT, 'soTien': soTien, 'ghiChu': ghiChu};
+    return {
+      'maKT': maKT,
+      'maNV': maNV,
+      'maLKT': maLKT,
+      'moTa': moTa,
+      'ngayKT': ngayKT
+    };
   }
 }
+
+List<KhenThuong> listKhenThuong = [
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+  KhenThuong(
+      maKT: 'KT001',
+      maNV: 'NV001',
+      maLKT: 'LKT001',
+      moTa: 'Đi làm sớm',
+      ngayKT: Timestamp.fromDate(DateTime.now())),
+];
