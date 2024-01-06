@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:quanlynhanvien/constants/app_colors.dart';
+
+class InputSelect extends StatefulWidget {
+  final String label;
+  final String hinttext;
+  final String selectedOption;
+  final Function(String) onChanged;
+  final List<String> list;
+  const InputSelect(
+      {super.key,
+      required this.list,
+      required this.selectedOption,
+      required this.onChanged,
+      required this.label,
+      required this.hinttext});
+
+  @override
+  State<InputSelect> createState() => _InputSelectState();
+}
+
+class _InputSelectState extends State<InputSelect> {
+  String? value;
+  String dropdownValue = 'Nam';
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(widget.label),
+            const Text(
+              '*',
+              style: TextStyle(color: Colors.red),
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Container(
+          padding: const EdgeInsets.only(left: 15, right: 15),
+          decoration: BoxDecoration(
+              color: AppColors.whitePorcelain,
+              border: Border.all(width: 1, color: AppColors.greyIron),
+              borderRadius: BorderRadius.circular(4)),
+          child: DropdownButton(
+            value: value,
+            onChanged: (newValue) {
+              setState(() {
+                value = newValue;
+              });
+              if (newValue != null) widget.onChanged(newValue);
+            },
+            hint: Text(widget.hinttext),
+            dropdownColor: AppColors.whitePorcelain,
+            icon: const Icon(Icons.keyboard_arrow_down),
+            iconSize: 20,
+            underline: const SizedBox(),
+            isExpanded: true,
+            style: const TextStyle(color: Colors.black),
+            items: widget.list.map((valueitem) {
+              return DropdownMenuItem(value: valueitem, child: Text(valueitem));
+            }).toList(),
+          ),
+        ),
+      ],
+    ));
+  }
+}
