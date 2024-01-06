@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
-
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
-
 
 class StaffScreen extends StatefulWidget {
   const StaffScreen({super.key});
@@ -20,7 +17,6 @@ class _StaffScreenState extends State<StaffScreen> {
   int tabs = 0;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: DefaultTextStyle(
         style: const TextStyle(
@@ -89,7 +85,6 @@ class _StaffScreenState extends State<StaffScreen> {
           ],
         ),
       ),
-
     );
   }
 }
