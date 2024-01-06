@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:quanlynhanvien/components/add.department.component.dart';
 import 'package:quanlynhanvien/components/tablestaff.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/phongban.model.dart';
@@ -54,6 +55,13 @@ class DepartmentTab extends StatelessWidget {
               width: 20,
             ),
             InkWell(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AddDepartmentComponent();
+                    });
+              },
               child: Container(
                 width: 100,
                 height: 40,

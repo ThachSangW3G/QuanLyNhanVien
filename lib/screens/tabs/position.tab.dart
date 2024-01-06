@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quanlynhanvien/components/add.position.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/chucvu.model.dart';
 
@@ -51,6 +52,13 @@ class PositionTab extends StatelessWidget {
               width: 20,
             ),
             InkWell(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const AddPositionComponent();
+                    });
+              },
               child: Container(
                 width: 100,
                 height: 40,
