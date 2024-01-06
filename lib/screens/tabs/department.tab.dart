@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quanlynhanvien/components/add.discipline.type.component.dart';
 
 class DepartmentTab extends StatelessWidget {
   const DepartmentTab({super.key});
@@ -6,10 +7,19 @@ class DepartmentTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            color: Colors.blue,
-            child: const Center(
-              child: Text("Department"),
-            )));
+        body: Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AddDisciplineTypeComponent();
+                });
+          },
+          child: Text('show dialog'),
+        )
+      ],
+    ));
   }
 }
