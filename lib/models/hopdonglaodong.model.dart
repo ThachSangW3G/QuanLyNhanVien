@@ -33,3 +33,42 @@ class HopDongLaoDong {
     };
   }
 }
+
+List<HopDongLaoDong> listHDLD = [
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+];
