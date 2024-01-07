@@ -3,7 +3,7 @@ import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/screens/staff_screen.dart';
-import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
+import 'package:quanlynhanvien/screens/tabs/staff.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/bonus.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/contract.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/createaccount.tab.dart';
@@ -13,7 +13,6 @@ import 'package:quanlynhanvien/screens/tabs/leave.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/overview.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/position.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
-import 'package:quanlynhanvien/screens/tabs/staff.tab.dart';
 import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
 class ManagerStaffScreen extends StatefulWidget {
@@ -60,8 +59,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
           style: const TextStyle(
             fontFamily: 'CeraPro',
           ),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
             children: [
               const HeaderComponent(
                   name: 'Nguyễn Trung Tính',
@@ -132,7 +130,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                       Navigator.pushNamed(
                                           context, '/managerStaff/AddStaff');
                                     },
-                                    iconDataStart: Icons.add,
+                                    iconDataStart: Icons.visibility,
                                     check: tabs == 2,
                                     title: 'Thêm mới nhân viên'),
                                 ButtonComponent(
