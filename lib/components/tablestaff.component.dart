@@ -59,7 +59,6 @@ class _TableStaffState extends State<TableStaff> {
           nhanvien.ngaySinh,
           nhanvien.noiSinh,
           nhanvien.cCCD,
-          nhanvien.ghiChu
         ];
 
         return DataRow(cells: getCells(cells));
