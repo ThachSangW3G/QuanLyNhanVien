@@ -13,121 +13,127 @@ class DepartmentTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(
-              width: 10.0,
-            ),
-            SizedBox(
-              width: 300,
-              height: 40,
-              child: TextField(
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(20)),
-                  prefixIcon: SvgPicture.asset(
-                    '/icon_svg/search.svg',
-                    fit: BoxFit.scaleDown,
+        body: SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: 10.0,
+              ),
+              SizedBox(
+                width: 300,
+                height: 40,
+                child: TextField(
+                  style: const TextStyle(
                     color: Colors.black,
                   ),
-                  hintText: 'Search',
-                  hintStyle: const TextStyle(
-                    color: AppColors.greyBombay,
-                    fontFamily: 'SF Pro Display',
+                  textAlignVertical: TextAlignVertical.bottom,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(20)),
+                    prefixIcon: SvgPicture.asset(
+                      '/icon_svg/search.svg',
+                      fit: BoxFit.scaleDown,
+                      color: Colors.black,
+                    ),
+                    hintText: 'Search',
+                    hintStyle: const TextStyle(
+                      color: AppColors.greyBombay,
+                      fontFamily: 'SF Pro Display',
+                    ),
+                    filled: true,
+                    fillColor: AppColors.greyIron,
                   ),
-                  filled: true,
-                  fillColor: AppColors.greyIron,
                 ),
               ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            InkWell(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const AddDepartmentComponent();
-                    });
-              },
-              child: Container(
-                width: 100,
-                height: 40,
-                decoration: BoxDecoration(
-                    color: AppColors.bluePrussian,
-                    borderRadius: BorderRadius.circular(15)),
-                alignment: Alignment.center,
-                child: const Text(
-                  'Thêm',
-                  style: TextStyle(
-                      fontFamily: 'CeraPro', fontSize: 16, color: Colors.white),
-                ),
+              const SizedBox(
+                width: 20,
               ),
-            )
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: PaginatedDataTable(
-            source: RowSource(myData: listPB, count: listPB.length),
-            rowsPerPage: 10,
-            columnSpacing: 150,
-            columns: [
-              DataColumn(
-                  label: const Text(
-                    "STT",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AddDepartmentComponent();
+                      });
+                },
+                child: Container(
+                  width: 100,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: AppColors.bluePrussian,
+                      borderRadius: BorderRadius.circular(15)),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Thêm',
+                    style: TextStyle(
+                        fontFamily: 'CeraPro',
+                        fontSize: 16,
+                        color: Colors.white),
                   ),
-                  onSort: (columnIndex, ascending) {}),
-              DataColumn(
-                  label: const Text(
-                    "Mã Phòng ban",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                  ),
-                  onSort: (columnIndex, ascending) {}),
-              const DataColumn(
-                label: Text(
-                  "Tên phòng ban",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                 ),
-              ),
-              const DataColumn(
-                label: Text(
-                  "Ngày thành lập",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-              ),
-              const DataColumn(
-                label: Text(
-                  "Sửa",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-              ),
-              const DataColumn(
-                label: Text(
-                  "Xóa",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-              ),
+              )
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: PaginatedDataTable(
+              source: RowSource(myData: listPB, count: listPB.length),
+              rowsPerPage: 10,
+              columnSpacing: 120,
+              columns: [
+                DataColumn(
+                    label: const Text(
+                      "STT",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                    onSort: (columnIndex, ascending) {}),
+                DataColumn(
+                    label: const Text(
+                      "Mã Phòng ban",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                    onSort: (columnIndex, ascending) {}),
+                const DataColumn(
+                  label: Text(
+                    "Tên phòng ban",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                ),
+                const DataColumn(
+                  label: Text(
+                    "Ngày thành lập",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                ),
+                const DataColumn(
+                  label: Text(
+                    "Sửa",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                ),
+                const DataColumn(
+                  label: Text(
+                    "Xóa",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     ));
   }
 }
