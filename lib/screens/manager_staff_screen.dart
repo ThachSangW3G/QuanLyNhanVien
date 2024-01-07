@@ -11,7 +11,7 @@ import 'package:quanlynhanvien/screens/tabs/department.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/leave.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/overview.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/position.tab.dart';
-import 'package:quanlynhanvien/screens/tabs/add.staff.tab.dart';
+import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
 import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
 class ManagerStaffScreen extends StatefulWidget {
