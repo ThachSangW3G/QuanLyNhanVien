@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
@@ -7,16 +8,16 @@ import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 
-class StaffTab extends StatefulWidget {
-  const StaffTab({super.key});
+class AddStaffTab extends StatefulWidget {
+  const AddStaffTab({super.key});
 
   @override
-  State<StaffTab> createState() => _StaffTabState();
+  State<AddStaffTab> createState() => _AddStaffTabState();
 }
 
 const List<String> listGender = <String>['Nam', 'Nữ'];
 
-class _StaffTabState extends State<StaffTab> {
+class _AddStaffTabState extends State<AddStaffTab> {
   String? tennv;
   File? pathImage;
   @override

@@ -3,6 +3,7 @@ import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/screens/staff_screen.dart';
+import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/bonus.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/contract.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/createaccount.tab.dart';
@@ -29,6 +30,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
   List<String> pages = [
     'Overview',
     'Staff',
+    'AddStaff',
     'Department',
     'Position',
     'Contract',
@@ -44,6 +46,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
   Widget build(BuildContext context) {
     tabs = pages.indexOf(widget.page);
     if (widget.page == 'Staff' ||
+        widget.page == 'AddStaff' ||
         widget.page == 'Department' ||
         widget.page == 'Position') {
       checkStaff = true;
@@ -125,35 +128,46 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                         tabs = 2;
                                       });
                                       Navigator.pushNamed(
-                                          context, '/managerStaff/Department');
+                                          context, '/managerStaff/AddStaff');
                                     },
-                                    iconDataStart: Icons.assessment,
+                                    iconDataStart: Icons.visibility,
                                     check: tabs == 2,
-                                    title: 'Phòng ban'),
+                                    title: 'Thêm mới nhân viên'),
                                 ButtonComponent(
                                     onPressed: () {
                                       setState(() {
                                         tabs = 3;
                                       });
                                       Navigator.pushNamed(
+                                          context, '/managerStaff/Department');
+                                    },
+                                    iconDataStart: Icons.assessment,
+                                    check: tabs == 3,
+                                    title: 'Phòng ban'),
+                                ButtonComponent(
+                                    onPressed: () {
+                                      setState(() {
+                                        tabs = 4;
+                                      });
+                                      Navigator.pushNamed(
                                           context, '/managerStaff/Position');
                                     },
                                     iconDataStart: Icons.badge,
-                                    check: tabs == 3,
+                                    check: tabs == 4,
                                     title: 'Chức vụ'),
                               ],
                             ),
                           ),
                         ButtonComponent(
-                          check: tabs == 4,
+                          check: tabs == 5,
                           iconDataStart: Icons.save_as,
-                          iconDataEnd: tabs == 4
+                          iconDataEnd: tabs == 5
                               ? Icons.keyboard_arrow_down
                               : Icons.keyboard_arrow_left,
                           title: 'Hợp đồng lao động',
                           onPressed: () {
                             setState(() {
-                              tabs = 4;
+                              tabs = 5;
                               checkStaff = false;
                               checkKhenPhat = false;
                             });
@@ -170,7 +184,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                           title: 'Khen thưởng - kỹ luật',
                           onPressed: () {
                             setState(() {
-                              tabs = 5;
+                              tabs = 6;
                               checkStaff = false;
                               checkKhenPhat = true;
                             });
@@ -188,35 +202,35 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                 ButtonComponent(
                                     onPressed: () {
                                       setState(() {
-                                        tabs = 5;
+                                        tabs = 6;
                                       });
                                       Navigator.pushNamed(
                                           context, '/managerStaff/Bonus');
                                     },
                                     iconDataStart: Icons.cookie,
-                                    check: tabs == 5,
+                                    check: tabs == 6,
                                     title: 'Khen thưởng'),
                                 ButtonComponent(
                                     onPressed: () {
                                       setState(() {
-                                        tabs = 6;
+                                        tabs = 7;
                                       });
                                       Navigator.pushNamed(
                                           context, '/managerStaff/Decipline');
                                     },
                                     iconDataStart: Icons.electric_meter,
-                                    check: tabs == 6,
+                                    check: tabs == 7,
                                     title: 'Kỷ luật'),
                               ],
                             ),
                           ),
                         ButtonComponent(
-                          check: tabs == 7,
+                          check: tabs == 8,
                           iconDataStart: Icons.credit_score,
-                          iconDataEnd: tabs == 7
+                          iconDataEnd: tabs == 8
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
-                          title: 'Nghĩ phép',
+                          title: 'Nghỉ phép',
                           onPressed: () {
                             setState(() {
                               tabs = 8;
@@ -227,9 +241,9 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                           },
                         ),
                         ButtonComponent(
-                          check: tabs == 8,
+                          check: tabs == 9,
                           iconDataStart: Icons.person_add,
-                          iconDataEnd: tabs == 8
+                          iconDataEnd: tabs == 9
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
                           title: 'Tạo tài khoản',
@@ -255,6 +269,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                         children: const [
                           OverviewTab(),
                           StaffTab(),
+                          AddStaffTab(),
                           DepartmentTab(),
                           PositionTab(),
                           ConstactTab(),

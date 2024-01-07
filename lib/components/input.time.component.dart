@@ -7,7 +7,7 @@ class InputTimePicker extends StatefulWidget {
   final String label;
   final String hinttext;
   final String? name;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<DateTime> onChanged;
 
   const InputTimePicker(
       {super.key,
@@ -34,7 +34,7 @@ class _InputNumberComponentState extends State<InputTimePicker> {
       setState(() {
         selectedDate = picked;
       });
-      widget.onChanged(DateFormat('dd/MM/yyyy').format(selectedDate!));
+      widget.onChanged(selectedDate!);
     }
   }
 
