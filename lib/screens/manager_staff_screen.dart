@@ -12,6 +12,7 @@ import 'package:quanlynhanvien/screens/tabs/department.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/leave.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/overview.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/position.tab.dart';
+import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/staff.tab.dart';
 import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
@@ -59,7 +60,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
           style: const TextStyle(
             fontFamily: 'CeraPro',
           ),
-          child: Column(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
             children: [
               const HeaderComponent(
                   name: 'Nguyễn Trung Tính',
@@ -130,7 +132,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                       Navigator.pushNamed(
                                           context, '/managerStaff/AddStaff');
                                     },
-                                    iconDataStart: Icons.visibility,
+                                    iconDataStart: Icons.add,
                                     check: tabs == 2,
                                     title: 'Thêm mới nhân viên'),
                                 ButtonComponent(

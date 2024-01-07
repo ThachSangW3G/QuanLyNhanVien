@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quanlynhanvien/components/input.number.component.dart';
@@ -18,282 +19,335 @@ const List<String> listGender = <String>['Nam', 'Nữ'];
 
 class _AddStaffTabState extends State<AddStaffTab> {
   String? tennv;
-  String? maNV;
-
+  File? pathImage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: DefaultTextStyle(
-      style: const TextStyle(),
-      child: Padding(
-        padding: EdgeInsets.all(MediaQuery.sizeOf(context).width / 30),
-        child: Column(
-          children: [
-            const Row(
-              children: [
-                Text(
-                  'Nhân viên',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'CeraPro'),
-                ),
-                Icon(Icons.keyboard_arrow_right),
-                Text(
-                  'Thêm mới nhân viên',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'CeraPro'),
-                )
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height / 30,
-            ),
-            const Row(
-              children: [
-                Text(
-                  'Những ô có đánh dấu',
-                  style: TextStyle(fontSize: 10),
-                ),
-                Text(
-                  ' * ',
-                  style: TextStyle(color: Colors.red),
-                ),
-                Text(
-                  'là bắt buộc',
-                  style: TextStyle(fontSize: 10),
-                )
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height / 30,
-            ),
-            Expanded(
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  DefaultTextStyle(
-                    style: const TextStyle(fontSize: 16, fontFamily: 'CeraPro'),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1, color: AppColors.greyShuttle),
-                          borderRadius: BorderRadius.circular(15)),
-                      padding: const EdgeInsets.all(30),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              InputTextField(
-                                  label: 'Mã Nhân Viên',
-                                  name: '',
-                                  isRequired: true,
-                                  hinttext: 'NV001',
-                                  onChanged: (value) {
-                                    maNV = value;
-                                    print(maNV);
-                                  }),
-                              const SizedBox(
-                                width: 45,
+        body: Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.sizeOf(context).width / 30),
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height / 30,
+          ),
+          const Row(
+            children: [
+              Text(
+                'Nhân viên',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'CeraPro'),
+              ),
+              Icon(Icons.keyboard_arrow_right),
+              Text(
+                'Thêm mới nhân viên',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'CeraPro'),
+              )
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height / 30,
+          ),
+          const Row(
+            children: [
+              Text(
+                'Những ô có đánh dấu',
+                style: TextStyle(fontSize: 10),
+              ),
+              Text(
+                ' * ',
+                style: TextStyle(color: Colors.red),
+              ),
+              Text(
+                'là bắt buộc',
+                style: TextStyle(fontSize: 10),
+              )
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height / 30,
+          ),
+          Expanded(
+            child: DefaultTextStyle(
+              style: const TextStyle(fontSize: 16, fontFamily: 'CeraPro'),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: AppColors.greyShuttle),
+                    borderRadius: BorderRadius.circular(15)),
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Ảnh thẻ 3x4'),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                try {
+                                  //                                final pickedFile = await ImagePickerWeb.pickImage();
+                                  // if (pickedFile != null) {
+                                  //   // Process the picked file, e.g., display it in an Image widget
+                                  //   setState(() {
+                                  //     imageFile = pickedFile;
+                                  //   });
+                                  // }
+                                } catch (e) {
+                                  print('Error picking image: $e');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.greyShuttle,
                               ),
-                              InputTextField(
-                                  label: 'Họ và Tên',
-                                  name: '',
-                                  isRequired: true,
-                                  hinttext: 'Nguyễn Văn A',
-                                  onChanged: (value) {
-                                    tennv = value;
-                                  }),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              // InputTextField(
-                              //     label: 'Biệt Danh',
-                              //     name: '',
-                              //     isRequired: false,
-                              //     hinttext: 'Tính Đẹp Trai',
-                              //     onChanged: (value) {}),
-                              Expanded(child: Container())
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            children: [
-                              InputTextField(
-                                  label: 'Email',
-                                  name: '',
-                                  isRequired: true,
-                                  hinttext: 'nguyenvana@gmail.com',
-                                  onChanged: (valua) {}),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputNumberField(
-                                  label: 'Số Điện Thoại',
-                                  name: '',
-                                  hinttext: '0123456789',
-                                  onChanged: (valua) {}),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputTimePicker(
-                                  label: 'Ngày sinh',
-                                  name: '',
-                                  hinttext: 'DD/MM/YYYY',
-                                  onChanged: (value) {}),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InputSelect(
-                                  list: listGender,
-                                  label: 'Giới tính',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn giới tính--'),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: listGender,
-                                  label: 'Tình trạng hôn nhân',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn tình trạng hôn nhân--'),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: provinces,
-                                  label: 'Nơi sinh',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn nơi sinh--'),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InputTextMultiline(
-                                  label: 'Địa chỉ tạm trú',
-                                  name: '',
-                                  hinttext: '',
-                                  onChanged: (value) {}),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputTextMultiline(
-                                  label: 'Địa chỉ thường trú',
-                                  name: '',
-                                  hinttext: '',
-                                  onChanged: (value) {}),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InputSelect(
-                                  list: listGender,
-                                  label: 'Quốc tịch',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn quốc tịch--'),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: listGender,
-                                  label: 'Dân tộc',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn dân tộc--'),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: provinces,
-                                  label: 'Tôn giáo',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn tôn giáo--'),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InputNumberField(
-                                  label: 'Số CMND/CCCD',
-                                  name: '',
-                                  hinttext: '--Nhập số CMND/CCCD--',
-                                  onChanged: (valua) {}),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputTimePicker(
-                                  label: 'Ngày cấp CMND/CCCD',
-                                  name: '',
-                                  hinttext: 'DD/MM/YYYY',
-                                  onChanged: (value) {}),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: provinces,
-                                  label: 'Nơi cấp CMND/CCCD',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn nơi cấp CCCD/CMND--'),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InputSelect(
-                                  list: provinces,
-                                  label: 'Phòng ban',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn phòng ban--'),
-                              const SizedBox(
-                                width: 45,
-                              ),
-                              InputSelect(
-                                  list: provinces,
-                                  label: 'Chức vụ',
-                                  selectedOption: '',
-                                  onChanged: (value) {},
-                                  hinttext: '--Chọn chức vụ--'),
-                            ],
-                          ),
-                        ],
-                      ),
+                              child: const Text('Choose File',
+                                  style: TextStyle(
+                                      fontFamily: 'CeraPro',
+                                      color: AppColors.white)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        ClipRRect(
+                          child: pathImage != null
+                              ? Image.file(
+                                  pathImage!,
+                                  width: 95,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/images/avatar.jpg',
+                                  width: 95,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      children: [
+                        InputTextField(
+                            label: 'Mã Nhân Viên',
+                            name: '',
+                            isRequired: true,
+                            hinttext: 'NV001',
+                            onChanged: (value) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputTextField(
+                            label: 'Họ và Tên',
+                            name: '',
+                            isRequired: true,
+                            hinttext: 'Nguyễn Văn A',
+                            onChanged: (valua) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        Expanded(child: Container())
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      children: [
+                        InputTextField(
+                            label: 'Email',
+                            name: '',
+                            isRequired: true,
+                            hinttext: 'nguyenvana@gmail.com',
+                            onChanged: (valua) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputNumberField(
+                            label: 'Số Điện Thoại',
+                            name: '',
+                            hinttext: '0123456789',
+                            onChanged: (valua) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputTimePicker(
+                            label: 'Ngày sinh',
+                            name: '',
+                            hinttext: 'DD/MM/YYYY',
+                            onChanged: (value) {}),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputSelect(
+                            list: listGender,
+                            label: 'Giới tính',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn giới tính--'),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: listGender,
+                            label: 'Tình trạng hôn nhân',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn tình trạng hôn nhân--'),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: provinces,
+                            label: 'Nơi sinh',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn nơi sinh--'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputTextMultiline(
+                            label: 'Địa chỉ tạm trú',
+                            name: '',
+                            hinttext: '',
+                            onChanged: (value) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputTextMultiline(
+                            label: 'Địa chỉ thường trú',
+                            name: '',
+                            hinttext: '',
+                            onChanged: (value) {}),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputSelect(
+                            list: listGender,
+                            label: 'Quốc tịch',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn quốc tịch--'),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: listGender,
+                            label: 'Dân tộc',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn dân tộc--'),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: provinces,
+                            label: 'Tôn giáo',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn tôn giáo--'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputNumberField(
+                            label: 'Số CMND/CCCD',
+                            name: '',
+                            hinttext: '--Nhập số CMND/CCCD--',
+                            onChanged: (valua) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputTimePicker(
+                            label: 'Ngày cấp CMND/CCCD',
+                            name: '',
+                            hinttext: 'DD/MM/YYYY',
+                            onChanged: (value) {}),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: provinces,
+                            label: 'Nơi cấp CMND/CCCD',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn nơi cấp CCCD/CMND--'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputSelect(
+                            list: provinces,
+                            label: 'Phòng ban',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn phòng ban--'),
+                        const SizedBox(
+                          width: 45,
+                        ),
+                        InputSelect(
+                            list: provinces,
+                            label: 'Chức vụ',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn chức vụ--'),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.bluedarkColor,
+                      ),
+                      child: const Text('Lưu',
+                          style: TextStyle(
+                              fontFamily: 'CeraPro', color: AppColors.white)),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ));
   }
