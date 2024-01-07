@@ -60,8 +60,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
           style: const TextStyle(
             fontFamily: 'CeraPro',
           ),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
             children: [
               const HeaderComponent(
                   name: 'Nguyễn Trung Tính',
@@ -74,7 +73,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                   color: AppColors.blueColor,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Column(
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         ButtonComponent(
                             check: tabs == 0,
