@@ -7,6 +7,7 @@ abstract class KhenThuongRepository {
   Future<KhenThuong> getKhenThuong(String maKT);
   Future<void> delKhenThuong(String maKT);
   Future<void> updKhenThuong(KhenThuong khenThuong);
+  Future<KhenThuong?> getLastKhenThuong();
 }
 
 class KhenThuongRepositoryImpl implements KhenThuongRepository {
@@ -56,5 +57,20 @@ class KhenThuongRepositoryImpl implements KhenThuongRepository {
         .doc(khenThuong.maKT)
         .update(khenThuong.toJson())
         .then((value) => print('update KhenThuong succcessfully'));
+  }
+
+  @override
+  Future<KhenThuong?> getLastKhenThuong() async {
+    List<KhenThuong> listLKT = [];
+    await khenThuongs
+        .orderBy('maKT', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT.add(KhenThuong.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
   }
 }

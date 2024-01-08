@@ -1,6 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/khenthuong.model.dart';
+import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
+import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -13,8 +24,19 @@ class AddBonusComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<AddBonusComponent> {
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
+    String? maNV;
+    String? maLKT;
+    String? moTa;
+    DateTime? ngayKT;
+
+    final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
+    final nhanVienProvider = Provider.of<NhanVienProvider>(context);
+    final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+
     return AlertDialog(
       title: const Text(
         'Thêm khen thưởng',
@@ -49,21 +71,67 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
             child: Column(children: [
               Row(
                 children: [
-                  InputSelect(
-                      list: list,
-                      label: 'Nhân Viên',
-                      selectedOption: '',
-                      onChanged: (value) {},
-                      hinttext: '--Chọn nhân viên--'),
+                  FutureBuilder<List<NhanVien>>(
+                      future: nhanVienProvider.getAllNhanVien(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final listNhanVien = snapshot.data;
+                          final List<String> listString = [];
+                          for (NhanVien nhanVien in listNhanVien!) {
+                            listString
+                                .add(nhanVien.maNV + ' - ' + nhanVien.hoTen);
+                          }
+                          return InputSelect(
+                              list: listString,
+                              label: 'Nhân Viên',
+                              selectedOption: '',
+                              onChanged: (value) {
+                                final index = listString.indexOf(value);
+                                maNV = listNhanVien[index].maNV;
+                              },
+                              hinttext: '--Chọn nhân viên--');
+                        } else {
+                          return InputSelect(
+                              list: const [],
+                              label: 'Nhân Viên',
+                              selectedOption: '',
+                              onChanged: (value) {},
+                              hinttext: '--Chọn nhân viên--');
+                        }
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
-                  InputSelect(
-                      list: list,
-                      label: 'Loại Khen Thưởng',
-                      selectedOption: '',
-                      onChanged: (value) {},
-                      hinttext: '--Chọn loại khen thưởng--'),
+                  FutureBuilder<List<LoaiKhenThuong>>(
+                      future: loaiKhenThuongProvider.getAllLoaiKhenThuong(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final listLoaiKhenThuong = snapshot.data;
+                          final List<String> listString = [];
+                          for (LoaiKhenThuong loaiKhenThuong
+                              in listLoaiKhenThuong!) {
+                            listString.add(loaiKhenThuong.maLKT +
+                                ' - ' +
+                                loaiKhenThuong.tenLKT);
+                          }
+                          return InputSelect(
+                              list: listString,
+                              label: 'Loại Khen Thưởng',
+                              selectedOption: '',
+                              onChanged: (value) {
+                                final index = listString.indexOf(value);
+                                maLKT = listLoaiKhenThuong[index].maLKT;
+                              },
+                              hinttext: '--Chọn loại khen thưởng--');
+                        } else {
+                          return InputSelect(
+                              list: const [],
+                              label: 'Loại Khen Thưởng',
+                              selectedOption: '',
+                              onChanged: (value) {},
+                              hinttext: '--Chọn loại khen thưởng--');
+                        }
+                      }),
                 ],
               ),
               const SizedBox(
@@ -76,7 +144,9 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
                       label: 'Mô tả',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -84,7 +154,9 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
                       label: 'Ngày khen thưởng',
                       name: '',
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayKT = value;
+                      }),
                 ],
               )
             ]),
@@ -103,7 +175,41 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              KhenThuong? lastiKhenThuong =
+                  await khenThuongProvider.getLastKhenThuong();
+
+              int soThuTu = lastiKhenThuong != null
+                  ? getLastThreeCharsAsInteger(lastiKhenThuong.maKT) + 1
+                  : 0;
+
+              String maKT = 'KT' + soThuTu.toString().padLeft(3, '0');
+
+              final khenThuong = KhenThuong(
+                  maKT: maKT,
+                  maNV: maNV!,
+                  maLKT: maLKT!,
+                  moTa: moTa!,
+                  ngayKT: Timestamp.fromDate(ngayKT!));
+
+              await khenThuongProvider.addKhenThuong(khenThuong);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm khen thưởng thành công!'));
+            } catch (e) {
+              print(e);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Thêm khen thưởng thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),

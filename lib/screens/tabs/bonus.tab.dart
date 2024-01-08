@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/add.bonus.component.dart';
 import 'package:quanlynhanvien/components/add.bonus.style.component.dart';
+import 'package:quanlynhanvien/components/confirm.delete.bonus.type.component.dart';
+import 'package:quanlynhanvien/components/update.bonus.component.dart';
+import 'package:quanlynhanvien/components/update.bonus.type.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
-import 'package:quanlynhanvien/models/chucvu.model.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
 import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
+import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -15,6 +22,8 @@ class BonusTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+    final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -47,22 +56,6 @@ class BonusTab extends StatelessWidget {
               ),
               SizedBox(
                 height: MediaQuery.sizeOf(context).height / 30,
-              ),
-              const Row(
-                children: [
-                  Text(
-                    'Những ô có đánh dấu',
-                    style: TextStyle(fontSize: 10),
-                  ),
-                  Text(
-                    ' * ',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  Text(
-                    'là bắt buộc',
-                    style: TextStyle(fontSize: 10),
-                  )
-                ],
               ),
               SizedBox(
                 height: MediaQuery.sizeOf(context).height / 30,
@@ -140,74 +133,89 @@ class BonusTab extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    PaginatedDataTable(
-                      source: RowSource(
-                          myData: listKhenThuong, count: listKhenThuong.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 150,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã Nhân Viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên Nhân Viên",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Loại khen thưởng",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Mô tả",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày khen thưởng",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Số tiền khen thưởng",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thao tác",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    FutureBuilder<List<KhenThuong>>(
+                        future: khenThuongProvider.getAllKhenThuong(),
+                        builder: (context, snapshot) {
+                          final listKhenThuong = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSource(
+                                myData: listKhenThuong,
+                                count: listKhenThuong?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 5,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã khen thưởng",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã Nhân Viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên Nhân Viên",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Loại khen thưởng",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Mô tả",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày khen thưởng",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thao tác",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -287,56 +295,77 @@ class BonusTab extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    PaginatedDataTable(
-                      source: RowSourceLoaiKT(
-                          myData: listLoaiKT, count: listLoaiKT.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 150,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã Loại Khen Thưởng",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên Loại Khen Thưởng",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Mô tả",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày tạo",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thao tác",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    FutureBuilder<List<LoaiKhenThuong>>(
+                        future: loaiKhenThuongProvider.getAllLoaiKhenThuong(),
+                        builder: (context, snapshot) {
+                          final listLoaiKhenThuong = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSourceLoaiKT(
+                                myData: listLoaiKhenThuong,
+                                count: listLoaiKhenThuong?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 5,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã loại khen thưởng",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên loại khen thưởng",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Mô tả",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Số tiền thưởng",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày tạo",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thao tác",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -351,15 +380,13 @@ class RowSource extends DataTableSource {
   final myData;
   // ignore: prefer_typing_uninitialized_variables
   final count;
-  RowSource({
-    required this.myData,
-    required this.count,
-  });
+  final BuildContext context;
+  RowSource({required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index, context);
     } else {
       return null;
     }
@@ -375,19 +402,27 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
   final khenThuong = data as KhenThuong;
+  final nhanVienProvider = Provider.of<NhanVienProvider>(context);
+
   return DataRow(
     cells: [
-      DataCell(SizedBox(
-          width: 50,
-          child: Text((listKhenThuong.indexOf(khenThuong) + 1).toString()))),
+      DataCell(SizedBox(width: 50, child: Text((index + 1).toString()))),
+      DataCell(Text(data.maKT.toString())),
       DataCell(SizedBox(width: 100, child: Text(data.maNV.toString()))),
-      DataCell(Text(data.tenNV.toString())),
+      DataCell(FutureBuilder<NhanVien>(
+          future: nhanVienProvider.getNhanVien(data.maNV),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final nhanVien = snapshot.data;
+              return Text(nhanVien!.hoTen);
+            }
+            return Text('');
+          })),
       DataCell(Text(data.maLKT.toString())),
       DataCell(Text(data.moTa.toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayKT.toDate()))),
-      const DataCell(Text('100000')),
       DataCell(Row(
         children: [
           IconButton(
@@ -396,7 +431,9 @@ DataRow recentFileDataRow(var data) {
               showDialog(
                   context: _scaffoldKey.currentContext!,
                   builder: (scaffoldKey) {
-                    return const AddBonusTypeComponent();
+                    return UpdateBonusComponent(
+                      khenThuong: data,
+                    );
                   });
             },
           ),
@@ -415,15 +452,14 @@ class RowSourceLoaiKT extends DataTableSource {
   final myData;
   // ignore: prefer_typing_uninitialized_variables
   final count;
-  RowSourceLoaiKT({
-    required this.myData,
-    required this.count,
-  });
+  final BuildContext context;
+  RowSourceLoaiKT(
+      {required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRowKhenThuong(myData![index]);
+      return recentFileDataRowKhenThuong(myData![index], index, context);
     } else {
       return null;
     }
@@ -439,15 +475,16 @@ class RowSourceLoaiKT extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRowKhenThuong(var data) {
+DataRow recentFileDataRowKhenThuong(var data, int index, BuildContext context) {
   final loaikhenThuong = data as LoaiKhenThuong;
   return DataRow(
     cells: [
-      DataCell(Text((listLoaiKT.indexOf(loaikhenThuong) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(data.maLKT.toString())),
       DataCell(Text(data.tenLKT.toString())),
       DataCell(Text(data.moTa.toString())),
-      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayTao.toDate()))),
+      DataCell(Text(data.soTienThuong.toString())),
+      DataCell(Text(DateFormat('dd/MM/yyyy').format(data.ngayTao.toDate()))),
       DataCell(Row(
         children: [
           IconButton(
@@ -456,13 +493,23 @@ DataRow recentFileDataRowKhenThuong(var data) {
               showDialog(
                   context: _scaffoldKey.currentContext!,
                   builder: (scaffoldKey) {
-                    return const AddBonusTypeComponent();
+                    return UpdateBonusTypeComponent(
+                      loaiKhenThuong: data,
+                    );
                   });
             },
           ),
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ConfirmDeleteBonusTypeComponent(
+                      maLKT: data.maLKT,
+                    );
+                  });
+            },
           )
         ],
       )),

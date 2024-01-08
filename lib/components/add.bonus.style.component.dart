@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
+import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
+import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -13,8 +21,16 @@ class AddBonusTypeComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<AddBonusTypeComponent> {
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
+    String? tenLKT;
+    String? moTa;
+    DateTime? ngayTao;
+    int? soTienThuong;
+    final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+
     return AlertDialog(
       title: const Text(
         'Thêm loại khen thưởng',
@@ -50,20 +66,13 @@ class _AddBonusComponentState extends State<AddBonusTypeComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã Loại Khen Thưởng',
+                      label: 'Tên loại khen thưởng',
                       name: '',
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
-                  const SizedBox(
-                    width: 45,
-                  ),
-                  InputTextField(
-                      label: 'Mã Khen Thưởng',
-                      name: '',
-                      isRequired: true,
-                      hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenLKT = valua;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -72,11 +81,13 @@ class _AddBonusComponentState extends State<AddBonusTypeComponent> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputTextMultiline(
-                      label: 'Mô tả',
+                  InputNumberField(
+                      label: 'Số tiền thưởng',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        soTienThuong = int.tryParse(value);
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -84,7 +95,23 @@ class _AddBonusComponentState extends State<AddBonusTypeComponent> {
                       label: 'Ngày tạo',
                       name: '',
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayTao = value;
+                      }),
+                ],
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  InputTextMultiline(
+                      label: 'Mô tả',
+                      name: '',
+                      hinttext: '',
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                 ],
               )
             ]),
@@ -103,12 +130,58 @@ class _AddBonusComponentState extends State<AddBonusTypeComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              LoaiKhenThuong? lastLoaiKhenThuong =
+                  await loaiKhenThuongProvider.getLastLoaiKhenThuong();
+
+              int soThuTu = lastLoaiKhenThuong != null
+                  ? getLastThreeCharsAsInteger(lastLoaiKhenThuong.maLKT) + 1
+                  : 0;
+
+              String maLKT = 'LKT' + soThuTu.toString().padLeft(3, '0');
+
+              final loaiKhenThuong = LoaiKhenThuong(
+                  maLKT: maLKT,
+                  moTa: moTa!,
+                  tenLKT: tenLKT!,
+                  soTienThuong: soTienThuong!,
+                  ngayTao: Timestamp.fromDate(ngayTao!));
+
+              await loaiKhenThuongProvider.addLoaiKhenThuong(loaiKhenThuong);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm loại khen thưởng thành công!'));
+            } catch (e) {
+              print(e);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Thêm loại khen thưởng thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );
