@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
-import 'package:provider/provider.dart';
-import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
-import 'package:quanlynhanvien/screens/login_screen.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/rest.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/timekeeping.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/wage.tab.dart';
 
 class StaffScreen extends StatefulWidget {
-  const StaffScreen({super.key});
+  final String page;
+  const StaffScreen({super.key, required this.page});
 
   @override
   State<StaffScreen> createState() => _StaffScreenState();
 }
 
 class _StaffScreenState extends State<StaffScreen> {
-  int tabs = 0;
+  int? tabs;
+
+  List<String> pages = ['Wage', 'Rest', 'Timekeeping'];
+
   @override
   Widget build(BuildContext context) {
+    tabs = pages.indexOf(widget.page);
+
     return Scaffold(
       body: DefaultTextStyle(
         style: const TextStyle(
@@ -49,6 +55,7 @@ class _StaffScreenState extends State<StaffScreen> {
                               setState(() {
                                 tabs = 1;
                               });
+                              Navigator.pushNamed(context, '/staff/Wage');
                             }),
                         ButtonComponent(
                           check: tabs == 2,
@@ -61,6 +68,7 @@ class _StaffScreenState extends State<StaffScreen> {
                             setState(() {
                               tabs = 2;
                             });
+                            Navigator.pushNamed(context, '/staff/Rest');
                           },
                         ),
                         ButtonComponent(
@@ -74,12 +82,25 @@ class _StaffScreenState extends State<StaffScreen> {
                             setState(() {
                               tabs = 3;
                             });
+                            Navigator.pushNamed(context, '/staff/Timekeeping');
                           },
                         ),
                       ],
                     ),
                   ),
                 ),
+                Expanded(
+                  child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 70,
+                      child: IndexedStack(
+                        index: pages.indexOf(widget.page),
+                        children: const [
+                          WageTab(),
+                          RestTab(),
+                          TimeKeeping(),
+                        ],
+                      )),
+                )
               ],
             )
           ],
