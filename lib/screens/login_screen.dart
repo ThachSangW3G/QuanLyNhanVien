@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context, '/financial/Overview');
                                       } else {
                                         Navigator.pushNamed(
-                                            context, '/staff/Overview');
+                                            context, '/staff/Wage');
                                       }
                                     }
                                   },
