@@ -7,14 +7,16 @@ class InputTextField extends StatefulWidget {
   final String name;
   final bool isRequired;
   final ValueChanged<String> onChanged;
+  bool? readOnly;
 
-  const InputTextField(
+  InputTextField(
       {super.key,
       required this.label,
       required this.name,
       required this.hinttext,
       required this.isRequired,
-      required this.onChanged});
+      required this.onChanged,
+      this.readOnly});
 
   @override
   State<InputTextField> createState() => _InputTextFieldState();
@@ -42,6 +44,9 @@ class _InputTextFieldState extends State<InputTextField> {
             height: 16,
           ),
           TextFormField(
+              readOnly: widget.readOnly != null && widget.readOnly == true
+                  ? true
+                  : false,
               initialValue: widget.name,
               validator: (value) =>
                   (value?.isEmpty ?? true) ? 'Title is required' : null,

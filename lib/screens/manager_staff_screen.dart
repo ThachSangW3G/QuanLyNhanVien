@@ -131,7 +131,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                       Navigator.pushNamed(
                                           context, '/managerStaff/AddStaff');
                                     },
-                                    iconDataStart: Icons.visibility,
+                                    iconDataStart: Icons.add,
                                     check: tabs == 2,
                                     title: 'Thêm mới nhân viên'),
                                 ButtonComponent(

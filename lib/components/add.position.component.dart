@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
-import 'package:quanlynhanvien/components/input.time.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/chucvu.model.dart';
+import 'package:quanlynhanvien/providers/chucvu.provider.dart';
 
 class AddPositionComponent extends StatefulWidget {
   const AddPositionComponent({super.key});
@@ -12,8 +16,15 @@ class AddPositionComponent extends StatefulWidget {
 }
 
 class _AddPhongBanState extends State<AddPositionComponent> {
+  String? maCV;
+  String? tenCV;
+  String? moTa;
+
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
+    final chucVuProvider = Provider.of<ChucVuProvider>(context);
     return AlertDialog(
       title: const Text(
         'Thêm Chức Vụ',
@@ -53,7 +64,9 @@ class _AddPhongBanState extends State<AddPositionComponent> {
                       name: '',
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        maCV = valua;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -62,7 +75,9 @@ class _AddPhongBanState extends State<AddPositionComponent> {
                       name: '',
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenCV = valua;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -71,19 +86,13 @@ class _AddPhongBanState extends State<AddPositionComponent> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputTimePicker(
-                      label: 'Ngày tạo',
-                      name: '',
-                      hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
-                  const SizedBox(
-                    width: 45,
-                  ),
                   InputTextMultiline(
                       label: 'Mô tả',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {})
+                      onChanged: (value) {
+                        moTa = value;
+                      })
                 ],
               )
             ]),
@@ -102,12 +111,42 @@ class _AddPhongBanState extends State<AddPositionComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final chucVu = ChucVu(maCV: maCV!, tenCV: tenCV!, moTa: moTa!);
+              setState(() {
+                loading = true;
+              });
+              await chucVuProvider.addChucVu(chucVu);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm chức vụ thành công!'));
+            } catch (e) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(buildFailedSnackbar('Thêm chức vụ thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );
