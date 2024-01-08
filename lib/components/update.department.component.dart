@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/phongban.model.dart';
+import 'package:quanlynhanvien/providers/phongban.provider.dart';
 
 class UpdateDepartmentComponent extends StatefulWidget {
   final PhongBan phongBan;
@@ -16,6 +22,12 @@ class UpdateDepartmentComponent extends StatefulWidget {
 class _AddPhongBanState extends State<UpdateDepartmentComponent> {
   @override
   Widget build(BuildContext context) {
+    String maPB = widget.phongBan.maPB;
+    String tenPB = widget.phongBan.tenPB;
+    DateTime ngayThanhLap = widget.phongBan.ngayThanhLap.toDate();
+    String moTa = widget.phongBan.moTa;
+
+    final phongBanProvider = Provider.of<PhongBanProvider>(context);
     return AlertDialog(
       title: const Text(
         'Thêm Phòng Ban',
@@ -52,7 +64,8 @@ class _AddPhongBanState extends State<UpdateDepartmentComponent> {
                 children: [
                   InputTextField(
                       label: 'Mã phòng ban',
-                      name: '',
+                      readOnly: true,
+                      name: widget.phongBan.maPB,
                       isRequired: true,
                       hinttext: 'Nhập mã phòng ban',
                       onChanged: (valua) {}),
@@ -61,10 +74,12 @@ class _AddPhongBanState extends State<UpdateDepartmentComponent> {
                   ),
                   InputTextField(
                       label: 'Tên phòng ban',
-                      name: '',
+                      name: widget.phongBan.tenPB,
                       isRequired: true,
                       hinttext: 'Nhập tên phòng ban',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenPB = valua;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -75,17 +90,22 @@ class _AddPhongBanState extends State<UpdateDepartmentComponent> {
                 children: [
                   InputTimePicker(
                       label: 'Ngày sinh',
-                      name: '',
+                      name: DateFormat('dd/MM/yyyy')
+                          .format((widget.phongBan.ngayThanhLap).toDate()),
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayThanhLap = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
                   InputTextMultiline(
                       label: 'Mô tả',
-                      name: '',
+                      name: widget.phongBan.moTa,
                       hinttext: '',
-                      onChanged: (value) {})
+                      onChanged: (value) {
+                        moTa = widget.phongBan.moTa;
+                      })
                 ],
               )
             ]),
@@ -104,7 +124,24 @@ class _AddPhongBanState extends State<UpdateDepartmentComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final phongBan = PhongBan(
+                  maPB: maPB,
+                  tenPB: tenPB,
+                  moTa: moTa,
+                  ngayThanhLap: Timestamp.fromDate(ngayThanhLap));
+
+              await phongBanProvider.updPhongBan(phongBan);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Cập nhật phòng ban thành công!'));
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Cập nhật phòng ban thất bại!'));
+            }
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),

@@ -55,6 +55,7 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
                   InputTextField(
                       label: 'Mã Loại Khen Thưởng',
                       name: '',
+                      readOnly: true,
                       isRequired: true,
                       hinttext: '',
                       onChanged: (valua) {}),

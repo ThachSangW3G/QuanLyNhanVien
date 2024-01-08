@@ -4,7 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/add.department.component.dart';
+import 'package:quanlynhanvien/components/confirm.delete.department.component.dart';
 import 'package:quanlynhanvien/components/tablestaff.component.dart';
+import 'package:quanlynhanvien/components/update.department.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/phongban.model.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
@@ -97,7 +99,9 @@ class DepartmentTab extends StatelessWidget {
                     final listPhongBan = snapshot.data;
                     return PaginatedDataTable(
                       source: RowSource(
-                          myData: listPhongBan, count: listPhongBan!.length),
+                          myData: listPhongBan,
+                          count: listPhongBan!.length,
+                          context: context),
                       rowsPerPage: 10,
                       columnSpacing: 120,
                       columns: [
@@ -161,15 +165,13 @@ class DepartmentTab extends StatelessWidget {
 class RowSource extends DataTableSource {
   var myData;
   final count;
-  RowSource({
-    required this.myData,
-    required this.count,
-  });
+  BuildContext context;
+  RowSource({required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index], index);
+      return recentFileDataRow(myData![index], index, context);
     } else
       return null;
   }
@@ -184,7 +186,7 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data, int index) {
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
   DateTime dateTime = (data.ngayThanhLap as Timestamp).toDate();
   final phongBan = data as PhongBan;
   return DataRow(
@@ -195,11 +197,27 @@ DataRow recentFileDataRow(var data, int index) {
       DataCell(Text(DateFormat('MM/dd/yyyy').format(dateTime))),
       DataCell(IconButton(
         icon: const Icon(Icons.edit),
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return UpdateDepartmentComponent(
+                  phongBan: data,
+                );
+              });
+        },
       )),
       DataCell(IconButton(
         icon: const Icon(Icons.delete),
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return ConfirmDeleteDepartmentComponent(
+                  maPB: data.maPB,
+                );
+              });
+        },
       ))
     ],
   );

@@ -9,11 +9,11 @@ class ChucVu {
     return ChucVu(
         maCV: json['maCV'] ?? '',
         tenCV: json['tenCV'] ?? '',
-        moTa: json['moTa']);
+        moTa: json['moTa'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {'maCV': maCV, 'tenCV': tenCV};
+    return {'maCV': maCV, 'tenCV': tenCV, 'moTa': moTa};
   }
 }
 
