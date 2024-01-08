@@ -632,6 +632,7 @@ class _AddStaffTabState extends State<AddStaffTab> {
 
                           print(11);
                           await nhanVienProvider.addNhanVien(nhanVien);
+
                           print(22);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(successSnackbar);

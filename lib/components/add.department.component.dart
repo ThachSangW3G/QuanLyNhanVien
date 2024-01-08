@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/phongban.model.dart';
+import 'package:quanlynhanvien/providers/phongban.provider.dart';
 
 class AddDepartmentComponent extends StatefulWidget {
   const AddDepartmentComponent({super.key});
@@ -12,8 +16,72 @@ class AddDepartmentComponent extends StatefulWidget {
 }
 
 class _AddPhongBanState extends State<AddDepartmentComponent> {
+  String? maPB;
+  String? tenPB;
+  DateTime? ngayThanhLap;
+  String? moTa;
+
+  SnackBar successSnackbar = SnackBar(
+    backgroundColor: Colors.green,
+    content: Container(
+      height: 50,
+      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 18,
+        ),
+        Text(
+          'Thêm phòng ban thành công!',
+        )
+      ]),
+    ),
+    duration: const Duration(milliseconds: 1500),
+    width: 280.0, // Width of the SnackBar.
+
+    padding: const EdgeInsets.symmetric(
+      horizontal: 8.0, // Inner padding for SnackBar content.
+    ),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
+
+  SnackBar faileSnackbar = SnackBar(
+    backgroundColor: Colors.red,
+    content: Container(
+      height: 50,
+      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.close_outlined,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 18,
+        ),
+        Text(
+          'Thêm phòng ban thất bại!',
+        )
+      ]),
+    ),
+    duration: const Duration(milliseconds: 1500),
+    width: 280.0, // Width of the SnackBar.
+
+    padding: const EdgeInsets.symmetric(
+      horizontal: 8.0, // Inner padding for SnackBar content.
+    ),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
+    final phongBanProvider = Provider.of<PhongBanProvider>(context);
     return AlertDialog(
       title: const Text(
         'Thêm Phòng Ban',
@@ -53,7 +121,9 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
                       name: '',
                       isRequired: true,
                       hinttext: 'Nhập mã phòng ban',
-                      onChanged: (valua) {}),
+                      onChanged: (value) {
+                        maPB = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -62,7 +132,9 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
                       name: '',
                       isRequired: true,
                       hinttext: 'Nhập tên phòng ban',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenPB = valua;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -72,10 +144,12 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InputTimePicker(
-                      label: 'Ngày sinh',
+                      label: 'Ngày thành lập',
                       name: '',
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayThanhLap = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -83,7 +157,9 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
                       label: 'Mô tả',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {})
+                      onChanged: (value) {
+                        moTa = value;
+                      })
                 ],
               )
             ]),
@@ -102,7 +178,22 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final phongBan = PhongBan(
+                  maPB: maPB!,
+                  tenPB: tenPB!,
+                  ngayThanhLap: Timestamp.fromDate(ngayThanhLap!),
+                  moTa: moTa!);
+
+              await phongBanProvider.addPhongBan(phongBan);
+
+              ScaffoldMessenger.of(context).showSnackBar(successSnackbar);
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(successSnackbar);
+            }
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
