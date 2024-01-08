@@ -10,7 +10,7 @@ class Flurorouter {
   static final Handler _loginHandler = Handler(
       handlerFunc: (BuildContext? context, Map<String, dynamic> params) =>
           const ManagerStaffScreen(
-            page: 'Position',
+            page: 'Bonus',
           ));
 
   static final Handler _managerStaffHandler = Handler(
