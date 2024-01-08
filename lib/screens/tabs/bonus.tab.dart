@@ -199,6 +199,13 @@ class BonusTab extends StatelessWidget {
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                         ),
+                        const DataColumn(
+                          label: Text(
+                            "Thao tác",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -323,14 +330,7 @@ class BonusTab extends StatelessWidget {
                         ),
                         const DataColumn(
                           label: Text(
-                            "Sửa",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Xóa",
+                            "Thao tác",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
@@ -387,7 +387,25 @@ DataRow recentFileDataRow(var data) {
       DataCell(Text(data.maLKT.toString())),
       DataCell(Text(data.moTa.toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayKT.toDate()))),
-      const DataCell(Text('100000'))
+      const DataCell(Text('100000')),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.mode_edit_outlined),
+            onPressed: () {
+              showDialog(
+                  context: _scaffoldKey.currentContext!,
+                  builder: (scaffoldKey) {
+                    return const AddBonusTypeComponent();
+                  });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {},
+          )
+        ],
+      )),
     ],
   );
 }
@@ -430,20 +448,24 @@ DataRow recentFileDataRowKhenThuong(var data) {
       DataCell(Text(data.tenLKT.toString())),
       DataCell(Text(data.moTa.toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayTao.toDate()))),
-      DataCell(IconButton(
-        icon: const Icon(Icons.mode_edit_outlined),
-        onPressed: () {
-          showDialog(
-              context: _scaffoldKey.currentContext!,
-              builder: (scaffoldKey) {
-                return const AddBonusTypeComponent();
-              });
-        },
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.mode_edit_outlined),
+            onPressed: () {
+              showDialog(
+                  context: _scaffoldKey.currentContext!,
+                  builder: (scaffoldKey) {
+                    return const AddBonusTypeComponent();
+                  });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {},
+          )
+        ],
       )),
-      DataCell(IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {},
-      ))
     ],
   );
 }
