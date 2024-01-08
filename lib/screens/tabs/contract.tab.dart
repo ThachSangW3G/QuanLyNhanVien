@@ -38,7 +38,8 @@ class ConstactTab extends StatelessWidget {
                     prefixIcon: SvgPicture.asset(
                       '/icon_svg/search.svg',
                       fit: BoxFit.scaleDown,
-                      color: Colors.black,
+                      colorFilter:
+                          const ColorFilter.mode(Colors.black, BlendMode.srcIn),
                     ),
                     hintText: 'Search',
                     hintStyle: const TextStyle(
