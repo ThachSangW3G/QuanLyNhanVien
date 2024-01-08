@@ -72,7 +72,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                   color: AppColors.blueColor,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Column(
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         ButtonComponent(
                             check: tabs == 0,
