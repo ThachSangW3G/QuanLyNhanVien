@@ -1,12 +1,22 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/chucvu.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/models/phongban.model.dart';
+import 'package:quanlynhanvien/providers/chucvu.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phongban.provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
 
 class AddStaffTab extends StatefulWidget {
   const AddStaffTab({super.key});
@@ -16,12 +26,204 @@ class AddStaffTab extends StatefulWidget {
 }
 
 const List<String> listGender = <String>['Nam', 'Nữ'];
+const List<String> listMarriage = <String>['Đã kết hôn', 'Chưa kết hôn'];
+const List<String> listNational = <String>['Việt Nam', 'Nước ngoài'];
+
+const List<String> listTonGiao = <String>[
+  'Không',
+  'Phật giáo',
+  'Công giáo',
+  'Tin lành',
+  'Hồi giáo',
+  'Cao Đài',
+  'Khác'
+];
+
+const List<String> listDanToc = <String>[
+  'Kinh',
+  'Tày',
+  'Thái',
+  'Mường',
+  "H'Mông",
+  'Dao',
+  'Nùng',
+  'Hrê',
+  'Gia Rai',
+  'Ê Đê',
+  'Ba Na',
+  'Xơ Đăng',
+  "M'Nông",
+  'Xtiêng',
+  'Raglai',
+  'Chăm',
+  'Chu Ru',
+  'Cơ Ho',
+  'Bana',
+  'Bru-Vân Kiều',
+  'Khmer',
+  'Cống',
+  'Sán Chay',
+  'Co Lao',
+  'La Chi',
+  'La Ha',
+  'Pu Péo',
+  'Lự',
+  'Lô Lô',
+  'Chơ Ro',
+  'Mảng',
+  'Bố Y',
+  'Si La',
+  'Puồng',
+  'Rơ Măm',
+  'Lự',
+  'Hà Nhì',
+  'La Hủ',
+  'Pa Then',
+  'Mạ',
+  'Ơ Đu',
+  'Kháng',
+  'Co Tu',
+  'Giáy',
+  'Nùng An',
+  'Hà Nhì',
+  'Xinh Mun',
+  'Kon Tum',
+  'Lào',
+  'Pà Thẻn',
+];
 
 class _AddStaffTabState extends State<AddStaffTab> {
-  String? tennv;
-  File? pathImage;
+  String? tenNV;
+  String? maNV;
+  String? image;
+  String? email;
+  String? soDienThoai;
+  DateTime? ngaySinh;
+  String? gioiTinh;
+  String? tinhTrangHonNhan;
+  String? noiSinh;
+  String? diaChiThuongTru;
+  String? diaChiTamTru;
+  String? quocTich;
+  String? danToc;
+  String? tonGiao;
+  String? cCCD;
+  DateTime? ngayCap;
+  String? noiCap;
+  String? maPB;
+  String? maCV;
+
+  @override
+  void initState() {
+    //deleteVegetable();
+    super.initState();
+  }
+
+  String defaultImageUrl =
+      'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+  String selectedFile = '';
+  //XFile file;
+  Uint8List? selectedImageInBytes;
+
+  _selectFile(bool imageFrom) async {
+    FilePickerResult? fileResult =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+
+    if (fileResult != null) {
+      selectedFile = fileResult.files.first.name;
+      setState(() {
+        selectedImageInBytes = fileResult.files.first.bytes;
+      });
+    }
+    print(selectedFile);
+  }
+
+  Future<String> _uploadFile() async {
+    String imageUrl = '';
+    try {
+      firabase_storage.UploadTask uploadTask;
+
+      firabase_storage.Reference ref = firabase_storage.FirebaseStorage.instance
+          .ref()
+          .child('images')
+          .child('/' + selectedFile);
+
+      final metadata =
+          firabase_storage.SettableMetadata(contentType: 'image/jpeg');
+
+      //uploadTask = ref.putFile(File(file.path));
+      uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+      await uploadTask.whenComplete(() => null);
+      imageUrl = await ref.getDownloadURL();
+    } catch (e) {
+      print(e);
+    }
+    return imageUrl;
+  }
+
+  SnackBar successSnackbar = SnackBar(
+    backgroundColor: Colors.green,
+    content: Container(
+      height: 50,
+      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 18,
+        ),
+        Text(
+          'Thêm nhân viên thành công!',
+        )
+      ]),
+    ),
+    duration: const Duration(milliseconds: 1500),
+    width: 280.0, // Width of the SnackBar.
+
+    padding: const EdgeInsets.symmetric(
+      horizontal: 8.0, // Inner padding for SnackBar content.
+    ),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
+
+  SnackBar faledSnackbar = SnackBar(
+    backgroundColor: Colors.red,
+    content: Container(
+      height: 50,
+      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Icon(
+          Icons.close_outlined,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 18,
+        ),
+        Text(
+          'Thêm nhân viên thất bại!',
+        )
+      ]),
+    ),
+    duration: const Duration(milliseconds: 1500),
+    width: 280.0, // Width of the SnackBar.
+
+    padding: const EdgeInsets.symmetric(
+      horizontal: 8.0, // Inner padding for SnackBar content.
+    ),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
   @override
   Widget build(BuildContext context) {
+    final phongBanProvider = Provider.of<PhongBanProvider>(context);
+    final chucVuProvider = Provider.of<ChucVuProvider>(context);
+    final nhanVienProvider = Provider.of<NhanVienProvider>(context);
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.symmetric(
@@ -94,18 +296,8 @@ class _AddStaffTabState extends State<AddStaffTab> {
                               height: 16,
                             ),
                             ElevatedButton(
-                              onPressed: () async {
-                                try {
-                                  //                                final pickedFile = await ImagePickerWeb.pickImage();
-                                  // if (pickedFile != null) {
-                                  //   // Process the picked file, e.g., display it in an Image widget
-                                  //   setState(() {
-                                  //     imageFile = pickedFile;
-                                  //   });
-                                  // }
-                                } catch (e) {
-                                  print('Error picking image: $e');
-                                }
+                              onPressed: () {
+                                _selectFile(false);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.greyShuttle,
@@ -120,21 +312,23 @@ class _AddStaffTabState extends State<AddStaffTab> {
                         const SizedBox(
                           width: 45,
                         ),
-                        ClipRRect(
-                          child: pathImage != null
-                              ? Image.file(
-                                  pathImage!,
-                                  width: 95,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  'assets/images/avatar.jpg',
-                                  width: 95,
-                                  height: 120,
+                        selectedImageInBytes == null
+                            ? Container(
+                                height: 200,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: NetworkImage(defaultImageUrl),
+                                        fit: BoxFit.cover)),
+                              )
+                            : Container(
+                                height: 200,
+                                width: 150,
+                                child: Image.memory(
+                                  selectedImageInBytes!,
                                   fit: BoxFit.cover,
                                 ),
-                        ),
+                              ),
                       ],
                     ),
                     const SizedBox(
@@ -147,7 +341,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             name: '',
                             isRequired: true,
                             hinttext: 'NV001',
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              maNV = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -156,7 +352,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             name: '',
                             isRequired: true,
                             hinttext: 'Nguyễn Văn A',
-                            onChanged: (valua) {}),
+                            onChanged: (value) {
+                              tenNV = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -173,7 +371,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             name: '',
                             isRequired: true,
                             hinttext: 'nguyenvana@gmail.com',
-                            onChanged: (valua) {}),
+                            onChanged: (value) {
+                              email = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -181,7 +381,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             label: 'Số Điện Thoại',
                             name: '',
                             hinttext: '0123456789',
-                            onChanged: (valua) {}),
+                            onChanged: (value) {
+                              soDienThoai = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -189,7 +391,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             label: 'Ngày sinh',
                             name: '',
                             hinttext: 'DD/MM/YYYY',
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              ngaySinh = value;
+                            }),
                       ],
                     ),
                     const SizedBox(
@@ -202,16 +406,20 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             list: listGender,
                             label: 'Giới tính',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              gioiTinh = value;
+                            },
                             hinttext: '--Chọn giới tính--'),
                         const SizedBox(
                           width: 45,
                         ),
                         InputSelect(
-                            list: listGender,
+                            list: listMarriage,
                             label: 'Tình trạng hôn nhân',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              tinhTrangHonNhan = value;
+                            },
                             hinttext: '--Chọn tình trạng hôn nhân--'),
                         const SizedBox(
                           width: 45,
@@ -220,7 +428,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             list: provinces,
                             label: 'Nơi sinh',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              noiSinh = value;
+                            },
                             hinttext: '--Chọn nơi sinh--'),
                       ],
                     ),
@@ -231,18 +441,22 @@ class _AddStaffTabState extends State<AddStaffTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InputTextMultiline(
-                            label: 'Địa chỉ tạm trú',
+                            label: 'Địa chỉ thường trú',
                             name: '',
                             hinttext: '',
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              diaChiThuongTru = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
                         InputTextMultiline(
-                            label: 'Địa chỉ thường trú',
+                            label: 'Địa chỉ tạm trú',
                             name: '',
                             hinttext: '',
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              diaChiTamTru = value;
+                            }),
                       ],
                     ),
                     const SizedBox(
@@ -252,28 +466,34 @@ class _AddStaffTabState extends State<AddStaffTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InputSelect(
-                            list: listGender,
+                            list: listNational,
                             label: 'Quốc tịch',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              quocTich = value;
+                            },
                             hinttext: '--Chọn quốc tịch--'),
                         const SizedBox(
                           width: 45,
                         ),
                         InputSelect(
-                            list: listGender,
+                            list: listDanToc,
                             label: 'Dân tộc',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              danToc = value;
+                            },
                             hinttext: '--Chọn dân tộc--'),
                         const SizedBox(
                           width: 45,
                         ),
                         InputSelect(
-                            list: provinces,
+                            list: listTonGiao,
                             label: 'Tôn giáo',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              tonGiao = value;
+                            },
                             hinttext: '--Chọn tôn giáo--'),
                       ],
                     ),
@@ -287,7 +507,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             label: 'Số CMND/CCCD',
                             name: '',
                             hinttext: '--Nhập số CMND/CCCD--',
-                            onChanged: (valua) {}),
+                            onChanged: (value) {
+                              cCCD = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -295,7 +517,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             label: 'Ngày cấp CMND/CCCD',
                             name: '',
                             hinttext: 'DD/MM/YYYY',
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              ngayCap = value;
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -303,7 +527,9 @@ class _AddStaffTabState extends State<AddStaffTab> {
                             list: provinces,
                             label: 'Nơi cấp CMND/CCCD',
                             selectedOption: '',
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              noiCap = value;
+                            },
                             hinttext: '--Chọn nơi cấp CCCD/CMND--'),
                       ],
                     ),
@@ -313,28 +539,109 @@ class _AddStaffTabState extends State<AddStaffTab> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        InputSelect(
-                            list: provinces,
-                            label: 'Phòng ban',
-                            selectedOption: '',
-                            onChanged: (value) {},
-                            hinttext: '--Chọn phòng ban--'),
+                        FutureBuilder<List<PhongBan>>(
+                            future: phongBanProvider.getAllPhongBan(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final listPhongBan = snapshot.data;
+                                final List<String> listString = [];
+                                for (PhongBan phongBan in listPhongBan!) {
+                                  listString.add(phongBan.tenPB);
+                                }
+                                return InputSelect(
+                                    list: listString,
+                                    label: 'Phòng ban',
+                                    selectedOption: '',
+                                    onChanged: (value) {
+                                      final index = listString.indexOf(value);
+                                      maPB = listPhongBan[index].maPB;
+                                    },
+                                    hinttext: '--Chọn phòng ban--');
+                              }
+                              return InputSelect(
+                                  list: const [],
+                                  label: 'Phòng ban',
+                                  selectedOption: '',
+                                  onChanged: (value) {},
+                                  hinttext: '--Chọn phòng ban--');
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
-                        InputSelect(
-                            list: provinces,
-                            label: 'Chức vụ',
-                            selectedOption: '',
-                            onChanged: (value) {},
-                            hinttext: '--Chọn chức vụ--'),
+                        FutureBuilder<List<ChucVu>>(
+                            future: chucVuProvider.getAllChucVu(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final listChucVu = snapshot.data;
+                                final List<String> listString = [];
+                                for (ChucVu chucVu in listChucVu!) {
+                                  listString.add(chucVu.tenCV);
+                                }
+                                return InputSelect(
+                                    list: listString,
+                                    label: 'Chức vụ',
+                                    selectedOption: '',
+                                    onChanged: (value) {
+                                      final index = listString.indexOf(value);
+                                      maCV = listChucVu[index].maCV;
+                                    },
+                                    hinttext: '--Chọn chức vụ--');
+                              }
+                              return InputSelect(
+                                  list: const [],
+                                  label: 'Chức vụ',
+                                  selectedOption: '',
+                                  onChanged: (value) {},
+                                  hinttext: '--Chọn chức vụ--');
+                            }),
                       ],
                     ),
                     const SizedBox(
                       height: 25,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          final imageUrl = await _uploadFile();
+
+                          print(imageUrl);
+
+                          print(11);
+
+                          final NhanVien nhanVien = NhanVien(
+                              maNV: maNV!,
+                              hoTen: tenNV!,
+                              email: email!,
+                              image: imageUrl,
+                              maPB: maPB!,
+                              ngaySinh: Timestamp.fromDate(ngaySinh!),
+                              gioiTinh: gioiTinh!,
+                              tinhTrangHonNhan: tinhTrangHonNhan!,
+                              cCCD: cCCD!,
+                              noiCap: noiCap!,
+                              ngayCap: Timestamp.fromDate(ngayCap!),
+                              maCV: maCV!,
+                              noiSinh: noiSinh!,
+                              diaChiThuongTru: diaChiThuongTru!,
+                              diaChiTamTru: diaChiTamTru!,
+                              soDienThoai: soDienThoai!,
+                              danToc: danToc!,
+                              tonGiao: tonGiao!,
+                              quocTich: quocTich!,
+                              hocVan: '12/12');
+
+                          print(11);
+                          await nhanVienProvider.addNhanVien(nhanVien);
+
+                          print(22);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(successSnackbar);
+                        } catch (e) {
+                          print(e);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(faledSnackbar);
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.bluedarkColor,
                       ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
 import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phongban.provider.dart';
 import 'package:quanlynhanvien/routes/routes.dart';
 import 'package:quanlynhanvien/screens/financial_staff_screen.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
@@ -19,7 +21,9 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => NguoiDungProvider()),
-      ChangeNotifierProvider(create: (_) => ChucVuProvider())
+      ChangeNotifierProvider(create: (_) => ChucVuProvider()),
+      ChangeNotifierProvider(create: (_) => PhongBanProvider()),
+      ChangeNotifierProvider(create: (_) => NhanVienProvider())
     ],
     child: MyApp(),
   ));
