@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
+import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/loaikyluat.model.dart';
+import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -13,8 +21,14 @@ class AddDisciplineTypeComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<AddDisciplineTypeComponent> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    String? tenLKL;
+    String? moTa;
+    DateTime? ngayTao;
+    int? soTienPhat;
+    final loaiKyLuatProvider = Provider.of<LoaiKyLuatProvider>(context);
     return AlertDialog(
       title: const Text(
         'Thêm loại kỷ luật',
@@ -50,20 +64,23 @@ class _AddBonusComponentState extends State<AddDisciplineTypeComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã Loại Kỷ Luật',
-                      name: '',
-                      isRequired: true,
-                      hinttext: '',
-                      onChanged: (valua) {}),
-                  const SizedBox(
-                    width: 45,
-                  ),
-                  InputTextField(
                       label: 'Tên Loại Kỷ Luật',
                       name: '',
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenLKL = valua;
+                      }),
+                  const SizedBox(
+                    width: 45,
+                  ),
+                  InputNumberField(
+                      label: 'Số tiền phạt',
+                      name: '',
+                      hinttext: '',
+                      onChanged: (valua) {
+                        soTienPhat = int.tryParse(valua);
+                      }),
                 ],
               ),
               const SizedBox(
@@ -76,7 +93,9 @@ class _AddBonusComponentState extends State<AddDisciplineTypeComponent> {
                       label: 'Mô tả',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -84,7 +103,9 @@ class _AddBonusComponentState extends State<AddDisciplineTypeComponent> {
                       label: 'Ngày tạo',
                       name: '',
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayTao = value;
+                      }),
                 ],
               )
             ]),
@@ -103,12 +124,58 @@ class _AddBonusComponentState extends State<AddDisciplineTypeComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              LoaiKyLuat? lastLoaiKyLuat =
+                  await loaiKyLuatProvider.getLastLoaiKyLuat();
+
+              int soThuTu = lastLoaiKyLuat != null
+                  ? getLastThreeCharsAsInteger(lastLoaiKyLuat.maLKL) + 1
+                  : 0;
+
+              String maLKL = 'LKL' + soThuTu.toString().padLeft(3, '0');
+
+              final loaiKyLuat = LoaiKyLuat(
+                  maLKL: maLKL,
+                  moTa: moTa!,
+                  tenLKL: tenLKL!,
+                  soTienPhat: soTienPhat!,
+                  ngayTao: Timestamp.fromDate(ngayTao!));
+
+              await loaiKyLuatProvider.addLoaiKyLuat(loaiKyLuat);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm loại kỷ luật thành công!'));
+            } catch (e) {
+              print(e);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Thêm loại kỷ luật thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );

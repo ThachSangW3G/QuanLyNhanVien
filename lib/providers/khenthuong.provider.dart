@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
+import 'package:quanlynhanvien/repositories/khenthuong.repository.dart';
 
 class KhenThuongProvider extends ChangeNotifier {
-  late KhenThuongProvider khenThuongProvider;
+  late KhenThuongRepository khenThuongRepository;
 
   KhenThuongProvider() {
-    khenThuongProvider = KhenThuongProvider();
+    khenThuongRepository = KhenThuongRepositoryImpl();
   }
 
   Future<void> addKhenThuong(KhenThuong khenThuong) async {
-    await khenThuongProvider.addKhenThuong(khenThuong);
+    await khenThuongRepository.addKhenThuong(khenThuong);
     notifyListeners();
   }
 
   Future<List<KhenThuong>> getAllKhenThuong() async {
-    return await khenThuongProvider.getAllKhenThuong();
+    return await khenThuongRepository.getAllKhenThuong();
   }
 
   Future<KhenThuong> getKhenThuong(String maKT) async {
-    return await khenThuongProvider.getKhenThuong(maKT);
+    return await khenThuongRepository.getKhenThuong(maKT);
   }
 
   Future<void> delKhenThuong(String maKT) async {
-    await khenThuongProvider.delKhenThuong(maKT);
+    await khenThuongRepository.delKhenThuong(maKT);
     notifyListeners();
   }
 
   Future<void> updKhenThuong(KhenThuong khenThuong) async {
-    await khenThuongProvider.updKhenThuong(khenThuong);
+    await khenThuongRepository.updKhenThuong(khenThuong);
     notifyListeners();
+  }
+
+  Future<KhenThuong?> getLastKhenThuong() {
+    return khenThuongRepository.getLastKhenThuong();
   }
 }

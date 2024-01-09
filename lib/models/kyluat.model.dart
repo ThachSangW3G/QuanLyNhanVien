@@ -18,7 +18,7 @@ class KyLuat {
     return KyLuat(
         maKL: json['maKL'] ?? '',
         maNV: json['maNV'] ?? '',
-        maLKL: json['maLKT'] ?? '',
+        maLKL: json['maLKL'] ?? '',
         moTa: json['moTa'] ?? '',
         ngayKL: json['ngayKL']);
   }

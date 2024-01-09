@@ -3,22 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
-import 'package:quanlynhanvien/providers/phongban.provider.dart';
 
-class ConfirmDeleteDepartmentComponent extends StatefulWidget {
-  final String maPB;
-  const ConfirmDeleteDepartmentComponent({super.key, required this.maPB});
+import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
+
+class ConfirmDeleteBonusComponent extends StatefulWidget {
+  final String maKT;
+  const ConfirmDeleteBonusComponent({super.key, required this.maKT});
 
   @override
-  State<ConfirmDeleteDepartmentComponent> createState() =>
-      _AddBonusComponentState();
+  State<ConfirmDeleteBonusComponent> createState() => _AddBonusComponentState();
 }
 
-class _AddBonusComponentState extends State<ConfirmDeleteDepartmentComponent> {
+class _AddBonusComponentState extends State<ConfirmDeleteBonusComponent> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    final phongBanProvier = Provider.of<PhongBanProvider>(context);
+    final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
     return AlertDialog(
       title: const Text(
         'Bạn có chắc chắn muốn xóa không',
@@ -43,13 +43,13 @@ class _AddBonusComponentState extends State<ConfirmDeleteDepartmentComponent> {
               setState(() {
                 loading = true;
               });
-              await phongBanProvier.delPhongBan(widget.maPB);
+              await khenThuongProvider.delKhenThuong(widget.maKT);
 
               ScaffoldMessenger.of(context).showSnackBar(
-                  buildSuccessSnackbar('Xóa phòng ban thành công!'));
+                  buildSuccessSnackbar('Xóa loại khen thưởng thành công!'));
             } catch (e) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(buildFailedSnackbar('Xóa phòng ban thất bại!'));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Xóa loại khen thưởng thất bại!'));
             }
             setState(() {
               loading = false;

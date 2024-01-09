@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
+import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
+import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -16,8 +22,18 @@ class UpdateBonusTypeComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
+    String maLKT = widget.loaiKhenThuong.maLKT;
+    String tenLKT = widget.loaiKhenThuong.tenLKT;
+    int? soTienThuong = widget.loaiKhenThuong.soTienThuong;
+    String moTa = widget.loaiKhenThuong.moTa;
+    DateTime ngayTao = widget.loaiKhenThuong.ngayTao.toDate();
+
+    final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+
     return AlertDialog(
       title: const Text(
         'Thêm loại khen thưởng',
@@ -53,21 +69,25 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã Loại Khen Thưởng',
-                      name: '',
+                      label: 'Mã loại khen thưởng',
+                      name: maLKT,
                       readOnly: true,
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        maLKT = valua;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
                   InputTextField(
-                      label: 'Mã Khen Thưởng',
-                      name: '',
+                      label: 'Tên loại khen thưởng',
+                      name: tenLKT,
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenLKT = valua;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -76,21 +96,39 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputTextMultiline(
-                      label: 'Mô tả',
-                      name: '',
-                      hinttext: '',
-                      onChanged: (value) {}),
+                  InputNumberField(
+                      label: 'Số tiền thưởng',
+                      name: soTienThuong.toString(),
+                      hinttext: 'hinttext',
+                      onChanged: (value) {
+                        soTienThuong = int.tryParse(value);
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
                   InputTimePicker(
                       label: 'Ngày tạo',
-                      name: '',
+                      name: DateFormat('dd/MM/yyyy').format(ngayTao),
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayTao = value;
+                      }),
                 ],
-              )
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  InputTextMultiline(
+                      label: 'Mô tả',
+                      name: moTa,
+                      hinttext: '',
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
+                ],
+              ),
             ]),
           ),
         ],
@@ -107,12 +145,46 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              final loaiKhenThuong = LoaiKhenThuong(
+                  maLKT: maLKT,
+                  moTa: moTa,
+                  tenLKT: tenLKT,
+                  soTienThuong: soTienThuong!,
+                  ngayTao: Timestamp.fromDate(ngayTao));
+              await loaiKhenThuongProvider.updLoaiKhenThuong(loaiKhenThuong);
+              ScaffoldMessenger.of(context).showSnackBar(buildSuccessSnackbar(
+                  'Cập nhật loại khen thưởng thành công!'));
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Cập nhật loại khen thưởng thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );
