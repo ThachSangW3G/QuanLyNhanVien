@@ -32,7 +32,8 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => KhenThuongProvider()),
       ChangeNotifierProvider(create: (_) => LoaiKyLuatProvider()),
       ChangeNotifierProvider(create: (_) => KyLuatProvider()),
-      ChangeNotifierProvider(create: (_) => YeuCauNghiPhepProvider())
+      ChangeNotifierProvider(create: (_) => YeuCauNghiPhepProvider()),
+      ChangeNotifierProvider(create: (_) => NguoiDungProvider())
     ],
     child: MyApp(),
   ));

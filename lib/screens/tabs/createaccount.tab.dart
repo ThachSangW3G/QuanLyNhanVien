@@ -3,8 +3,15 @@ import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 
-class CreateAccountTab extends StatelessWidget {
+class CreateAccountTab extends StatefulWidget {
   const CreateAccountTab({super.key});
+
+  @override
+  State<CreateAccountTab> createState() => _CreateAccountTabState();
+}
+
+class _CreateAccountTabState extends State<CreateAccountTab> {
+  String tenDangNhap = '';
 
   @override
   Widget build(BuildContext context) {
@@ -100,10 +107,14 @@ class CreateAccountTab extends StatelessWidget {
                       children: [
                         InputTextField(
                             label: 'Tên Đăng Nhập',
-                            name: '',
+                            name: tenDangNhap,
                             hinttext: 'nguyenvana123',
                             isRequired: true,
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              setState(() {
+                                tenDangNhap = value;
+                              });
+                            }),
                         const SizedBox(
                           width: 45,
                         ),
@@ -119,7 +130,9 @@ class CreateAccountTab extends StatelessWidget {
                       height: 25,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        print(tenDangNhap);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.bluedarkColor,
                       ),

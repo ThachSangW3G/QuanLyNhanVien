@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/add.account.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/nhanvien.model.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
@@ -56,30 +57,21 @@ class StaffTab extends StatelessWidget {
               const SizedBox(
                 width: 20,
               ),
-              InkWell(
-                onTap: () {
-                  // showDialog(
-                  //     context: context,
-                  //     builder: (context) {
-                  //       return const AddDepartmentComponent();
-                  //     });
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (builder) {
+                        return const AddAccountComponent();
+                      });
                 },
-                child: Container(
-                  width: 100,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: AppColors.bluePrussian,
-                      borderRadius: BorderRadius.circular(15)),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Thêm',
-                    style: TextStyle(
-                        fontFamily: 'CeraPro',
-                        fontSize: 16,
-                        color: Colors.white),
-                  ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.bluedarkColor),
+                child: const Text(
+                  'Tạo tài khoản',
+                  style: TextStyle(color: Colors.white),
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(
