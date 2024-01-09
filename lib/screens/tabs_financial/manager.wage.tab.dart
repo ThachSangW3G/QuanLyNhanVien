@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:quanlynhanvien/components/wage.detail.component.dart';
+import 'package:intl/intl.dart';
+import 'package:quanlynhanvien/components/update.hesoluong.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
-import 'package:quanlynhanvien/models/bangluong.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/models/yeucaunghiphep.model.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-class WageTab extends StatefulWidget {
-  const WageTab({super.key});
+class ManagerWageTab extends StatefulWidget {
+  const ManagerWageTab({super.key});
 
   @override
-  State<WageTab> createState() => _WageTabState();
+  State<ManagerWageTab> createState() => _ManagerWageTabState();
 }
 
-class _WageTabState extends State<WageTab> {
+class _ManagerWageTabState extends State<ManagerWageTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +29,7 @@ class _WageTabState extends State<WageTab> {
                 height: MediaQuery.sizeOf(context).height / 30,
               ),
               const Text(
-                'Bảng Lương',
+                'Quản lý hệ số lương',
                 style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -45,7 +47,7 @@ class _WageTabState extends State<WageTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Danh sách yêu cầu nghĩ phép',
+                      'Danh sách nhân viên',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -56,9 +58,9 @@ class _WageTabState extends State<WageTab> {
                     ),
                     PaginatedDataTable(
                       source: RowSource(
-                          myData: listBangLuong, count: listBangLuong.length),
+                          myData: listNhanVien, count: listNhanVien.length),
                       rowsPerPage: 10,
-                      columnSpacing: 70,
+                      columnSpacing: 50,
                       columns: [
                         DataColumn(
                             label: const Text(
@@ -69,35 +71,60 @@ class _WageTabState extends State<WageTab> {
                             onSort: (columnIndex, ascending) {}),
                         DataColumn(
                             label: const Text(
-                              "Họ và tên",
+                              "Mã nhân viên",
                               style: TextStyle(
                                   fontWeight: FontWeight.w600, fontSize: 14),
                             ),
                             onSort: (columnIndex, ascending) {}),
                         const DataColumn(
                           label: Text(
-                            "Số tiền",
+                            "Tên nhân viên",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: SizedBox(
+                            width: 100,
+                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                            child: Text(
+                              "Phòng ban",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Text(
+                            "Chức vụ",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                         ),
                         const DataColumn(
                           label: Text(
-                            "Tháng",
+                            "Lương cơ bản",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                         ),
                         const DataColumn(
                           label: Text(
-                            "Năm",
+                            "Thời gian làm việc",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
                         ),
                         const DataColumn(
                           label: Text(
-                            "Chi tiết",
+                            "Hệ số lương",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Text(
+                            "Chỉnh sửa",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 14),
                           ),
@@ -146,25 +173,23 @@ class RowSource extends DataTableSource {
 }
 
 DataRow recentFileDataRow(var data) {
-  final khenThuong = data as BangLuong;
   return DataRow(
     cells: [
-      DataCell(Text((listBangLuong.indexOf(khenThuong) + 1).toString())),
-      const DataCell(Text('Nguyễn Trung Tính')),
-      DataCell(Text(data.soTien.toString())),
-      DataCell(Text(data.thang.toString())),
-      DataCell(Text(data.nam.toString())),
+      DataCell(Text((listNhanVien.indexOf(data) + 1).toString())),
+      DataCell(SizedBox(width: 100, child: Text(data.maNV.toString()))),
+      DataCell(Text(data.hoTen.toString())),
+      DataCell(Text(data.maPB.toString())),
+      DataCell(Text(data.maCV.toString())),
+      const DataCell(Text('1000000')),
+      const DataCell(Text('12 tháng')),
+      const DataCell(Text('1.1')),
       DataCell(IconButton(
-        icon: const Icon(
-          Icons.article,
-        ),
+        icon: const Icon(Icons.edit),
         onPressed: () {
           showDialog(
               context: _scaffoldKey.currentContext!,
               builder: (builder) {
-                return WageDetails(
-                  bangLuong: data,
-                );
+                return const UpdateLuongComponent();
               });
         },
       ))

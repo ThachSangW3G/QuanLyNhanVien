@@ -22,6 +22,13 @@ class InputSelect extends StatefulWidget {
 class _InputSelectState extends State<InputSelect> {
   String? value;
   String dropdownValue = 'Nam';
+
+  @override
+  void initState() {
+    value = widget.selectedOption;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(

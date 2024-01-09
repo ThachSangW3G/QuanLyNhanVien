@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
-import 'package:quanlynhanvien/components/input.time.component.dart';
+import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 
-class RequestRestCompnonet extends StatefulWidget {
-  const RequestRestCompnonet({super.key});
+class UpdateLuongComponent extends StatefulWidget {
+  const UpdateLuongComponent({super.key});
 
   @override
-  State<RequestRestCompnonet> createState() => _AddPhongBanState();
+  State<UpdateLuongComponent> createState() => _AddBonusComponentState();
 }
 
-class _AddPhongBanState extends State<RequestRestCompnonet> {
+class _AddBonusComponentState extends State<UpdateLuongComponent> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'Yêu Cầu Nghĩ Phép',
+        'Chỉnh sửa thông tin lương',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),
@@ -47,19 +46,23 @@ class _AddPhongBanState extends State<RequestRestCompnonet> {
             child: Column(children: [
               Row(
                 children: [
-                  InputTimePicker(
-                      label: 'Ngày bắt đầu',
+                  InputTextField(
+                      label: 'Mã nhân viên',
                       name: '',
-                      hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      readOnly: true,
+                      isRequired: true,
+                      hinttext: '',
+                      onChanged: (valua) {}),
                   const SizedBox(
                     width: 45,
                   ),
-                  InputTimePicker(
-                      label: 'Ngày kết thúc',
+                  InputTextField(
+                      label: 'Tên nhân viên',
                       name: '',
-                      hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      isRequired: true,
+                      readOnly: true,
+                      hinttext: '',
+                      onChanged: (valua) {}),
                 ],
               ),
               const SizedBox(
@@ -68,11 +71,23 @@ class _AddPhongBanState extends State<RequestRestCompnonet> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InputTextMultiline(
-                      label: 'Lý do',
+                  InputTextField(
+                      label: 'Lương cơ bản',
                       name: '',
+                      isRequired: true,
+                      readOnly: true,
                       hinttext: '',
-                      onChanged: (value) {})
+                      onChanged: (valua) {}),
+                  const SizedBox(
+                    width: 45,
+                  ),
+                  InputTextField(
+                      label: 'Hệ số lương',
+                      name: '',
+                      isRequired: true,
+                      readOnly: true,
+                      hinttext: '',
+                      onChanged: (valua) {}),
                 ],
               )
             ]),
@@ -102,3 +117,5 @@ class _AddPhongBanState extends State<RequestRestCompnonet> {
     );
   }
 }
+
+List<String> list = ['NV001  Nguyen Trung Tinh', 'NV002 - Thach A Sang'];

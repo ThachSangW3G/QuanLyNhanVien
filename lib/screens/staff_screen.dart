@@ -45,42 +45,42 @@ class _StaffScreenState extends State<StaffScreen> {
                     child: Column(
                       children: [
                         ButtonComponent(
-                            check: tabs == 1,
+                            check: tabs == 0,
                             iconDataStart: Icons.paid,
-                            iconDataEnd: tabs == 1
+                            iconDataEnd: tabs == 0
                                 ? Icons.keyboard_arrow_right
                                 : Icons.keyboard_arrow_left,
                             title: 'Thông tin lương',
                             onPressed: () {
                               setState(() {
-                                tabs = 1;
+                                tabs = 0;
                               });
                               Navigator.pushNamed(context, '/staff/Wage');
                             }),
                         ButtonComponent(
-                          check: tabs == 2,
+                          check: tabs == 1,
                           iconDataStart: Icons.spa,
-                          iconDataEnd: tabs == 2
+                          iconDataEnd: tabs == 1
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
                           title: 'Yêu cầu nghĩ phép',
                           onPressed: () {
                             setState(() {
-                              tabs = 2;
+                              tabs = 1;
                             });
                             Navigator.pushNamed(context, '/staff/Rest');
                           },
                         ),
                         ButtonComponent(
-                          check: tabs == 3,
+                          check: tabs == 2,
                           iconDataStart: Icons.checklist,
-                          iconDataEnd: tabs == 3
+                          iconDataEnd: tabs == 2
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
-                          title: 'Chấm công',
+                          title: 'Thông tin tài khoản',
                           onPressed: () {
                             setState(() {
-                              tabs = 3;
+                              tabs = 2;
                             });
                             Navigator.pushNamed(context, '/staff/Timekeeping');
                           },

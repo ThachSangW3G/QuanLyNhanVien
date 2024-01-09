@@ -6,7 +6,6 @@ import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
 import 'package:quanlynhanvien/routes/routes.dart';
-import 'package:quanlynhanvien/screens/financial_staff_screen.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
 
 import 'package:quanlynhanvien/firebase_options.dart';

@@ -6,12 +6,16 @@ class YeuCauNghiPhep {
   final Timestamp ngayKetThuc;
   final String lyDo;
   final String trangThai;
+  final Timestamp ngayduyet;
+  final String nguoiDuyet;
 
   YeuCauNghiPhep(
       {required this.maNV,
       required this.ngayBatDau,
       required this.ngayKetThuc,
       required this.lyDo,
+      required this.ngayduyet,
+      required this.nguoiDuyet,
       required this.trangThai});
 
   factory YeuCauNghiPhep.fromJson(Map<String, dynamic> json) {
@@ -19,6 +23,8 @@ class YeuCauNghiPhep {
         maNV: json['maNV'] ?? '',
         ngayBatDau: json['ngayBatDau'] ?? '',
         ngayKetThuc: json['ngayKetThuc'] ?? '',
+        ngayduyet: json['ngayDuyet'] ?? '',
+        nguoiDuyet: json['nguoiDuyet'] ?? '',
         lyDo: json['lyDo'] ?? '',
         trangThai: json['trangThai'] ?? '');
   }
@@ -29,6 +35,8 @@ class YeuCauNghiPhep {
       'ngayBatDau': ngayBatDau,
       'ngayKetThuc': ngayKetThuc,
       'lyDo': lyDo,
+      'nguoiDuyet': nguoiDuyet,
+      'ngayDuyet': ngayduyet,
       'trangThai': trangThai
     };
   }
@@ -39,6 +47,8 @@ List<YeuCauNghiPhep> listYeuCauNghiPhep = [
     maNV: "NV001",
     ngayBatDau: Timestamp.fromDate(DateTime(2024, 1, 8)),
     ngayKetThuc: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    ngayduyet: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    nguoiDuyet: 'NV003',
     lyDo: "Nghỉ phép đi công tác",
     trangThai: "Chờ duyệt",
   ),
@@ -46,13 +56,17 @@ List<YeuCauNghiPhep> listYeuCauNghiPhep = [
     maNV: "NV002",
     ngayBatDau: Timestamp.fromDate(DateTime(2024, 1, 9)),
     ngayKetThuc: Timestamp.fromDate(DateTime(2024, 1, 12)),
+    ngayduyet: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    nguoiDuyet: 'NV003',
     lyDo: "Nghỉ phép nghỉ lễ",
-    trangThai: "Đã duyệt",
+    trangThai: "Không được duyệt",
   ),
   YeuCauNghiPhep(
     maNV: "NV003",
     ngayBatDau: Timestamp.fromDate(DateTime(2024, 1, 8)),
     ngayKetThuc: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    ngayduyet: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    nguoiDuyet: 'NV003',
     lyDo: "Nghỉ phép đi công tác",
     trangThai: "Chờ duyệt",
   ),
@@ -60,6 +74,8 @@ List<YeuCauNghiPhep> listYeuCauNghiPhep = [
     maNV: "NV004",
     ngayBatDau: Timestamp.fromDate(DateTime(2024, 1, 9)),
     ngayKetThuc: Timestamp.fromDate(DateTime(2024, 1, 12)),
+    ngayduyet: Timestamp.fromDate(DateTime(2024, 1, 10)),
+    nguoiDuyet: 'NV003',
     lyDo: "Nghỉ phép nghỉ lễ",
     trangThai: "Đã duyệt",
   )
