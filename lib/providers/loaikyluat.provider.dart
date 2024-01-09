@@ -32,4 +32,8 @@ class LoaiKyLuatProvider extends ChangeNotifier {
     await loaiKyLuatRepository.updLoaiKyLuat(loaiKyLuat);
     notifyListeners();
   }
+
+  Future<LoaiKyLuat?> getLastLoaiKyLuat() {
+    return loaiKyLuatRepository.getLastLoaiKyLuat();
+  }
 }

@@ -7,6 +7,7 @@ abstract class KyLuatRepository {
   Future<KyLuat> getKyLuat(String maKL);
   Future<void> delKyLuat(String maKL);
   Future<void> updKyLuat(KyLuat kyLuat);
+  Future<KyLuat?> getLastKyLuat();
 }
 
 class KyLuatRepositoryImpl implements KyLuatRepository {
@@ -55,5 +56,20 @@ class KyLuatRepositoryImpl implements KyLuatRepository {
         .doc(kyLuat.maKL)
         .update(kyLuat.toJson())
         .then((value) => print('update KyLuat succcessfully'));
+  }
+
+  @override
+  Future<KyLuat?> getLastKyLuat() async {
+    List<KyLuat> listKL = [];
+    await kyLuats
+        .orderBy('maKL', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listKL.add(KyLuat.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listKL[0]);
   }
 }

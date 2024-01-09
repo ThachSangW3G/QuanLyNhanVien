@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/add.bonus.style.component.dart';
 import 'package:quanlynhanvien/components/add.discipline.component.dart';
 import 'package:quanlynhanvien/components/add.discipline.type.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/kyluat.model.dart';
 import 'package:quanlynhanvien/models/loaikyluat.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/kyluat.provider.dart';
+import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -15,6 +20,9 @@ class DeciplineTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final kyLuatProvider = Provider.of<KyLuatProvider>(context);
+    final loaiKyLuatProvider = Provider.of<LoaiKyLuatProvider>(context);
+
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -121,74 +129,89 @@ class DeciplineTab extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    PaginatedDataTable(
-                      source: RowSource(
-                          myData: danhSachKyLuat, count: danhSachKyLuat.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 150,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã Nhân Viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên Nhân Viên",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Loại kỷ luật",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Mô tả",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày bị kỷ luạt",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Số tiền",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thao tác",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    FutureBuilder<List<KyLuat>>(
+                        future: kyLuatProvider.getAllKyLuat(),
+                        builder: (context, snapshot) {
+                          final listKyLuat = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSource(
+                                myData: listKyLuat,
+                                count: listKyLuat?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 5,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã loại kỷ luật",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã Nhân Viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên Nhân Viên",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Loại kỷ luật",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Mô tả",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày bị kỷ luật",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thao tác",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -268,57 +291,68 @@ class DeciplineTab extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    PaginatedDataTable(
-                      source: RowSourceLoaiKT(
-                          myData: danhSachLoaiKyLuat,
-                          count: danhSachLoaiKyLuat.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 150,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã Loại Kỷ Luật",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên Loại Kỷ Luật",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Mô tả",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày tạo",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thao tác",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    FutureBuilder<List<LoaiKyLuat>>(
+                        future: loaiKyLuatProvider.getAllLoaiKyLuat(),
+                        builder: (context, snapshot) {
+                          final listLoaiKyLuat = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSourceLoaiKT(
+                                myData: listLoaiKyLuat,
+                                count: listLoaiKyLuat?.length ?? 0),
+                            rowsPerPage: 5,
+                            columnSpacing: 100,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã Loại Kỷ Luật",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên Loại Kỷ Luật",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Mô tả",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày tạo",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thao tác",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -333,15 +367,13 @@ class RowSource extends DataTableSource {
   final myData;
   // ignore: prefer_typing_uninitialized_variables
   final count;
-  RowSource({
-    required this.myData,
-    required this.count,
-  });
+  final BuildContext context;
+  RowSource({required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index, context);
     } else {
       return null;
     }
@@ -357,19 +389,25 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
-  final khenThuong = data as KyLuat;
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
+  final nhanVienProvider = Provider.of<NhanVienProvider>(context);
   return DataRow(
     cells: [
-      DataCell(SizedBox(
-          width: 50,
-          child: Text((danhSachKyLuat.indexOf(khenThuong) + 1).toString()))),
-      DataCell(SizedBox(width: 100, child: Text(data.maNV.toString()))),
-      const DataCell(Text('ahihi')),
+      DataCell(SizedBox(width: 50, child: Text((index + 1).toString()))),
+      DataCell(SizedBox(width: 100, child: Text(data.maKL.toString()))),
+      DataCell(Text(data.maNV)),
+      DataCell(FutureBuilder<NhanVien>(
+          future: nhanVienProvider.getNhanVien(data.maNV),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final nhanVien = snapshot.data;
+              return Text(nhanVien!.hoTen);
+            }
+            return Text('');
+          })),
       DataCell(Text(data.maLKL)),
       DataCell(Text(data.moTa.toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayKL.toDate()))),
-      const DataCell(Text('100000')),
       DataCell(Row(
         children: [
           IconButton(
@@ -405,7 +443,7 @@ class RowSourceLoaiKT extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRowKhenThuong(myData![index]);
+      return recentFileDataRowKhenThuong(myData![index], index);
     } else {
       return null;
     }
@@ -421,11 +459,11 @@ class RowSourceLoaiKT extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRowKhenThuong(var data) {
+DataRow recentFileDataRowKhenThuong(var data, int index) {
   final loaiKyLuat = data as LoaiKyLuat;
   return DataRow(
     cells: [
-      DataCell(Text((danhSachLoaiKyLuat.indexOf(loaiKyLuat) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(data.maLKL.toString())),
       DataCell(Text(data.tenLKL.toString())),
       DataCell(Text(data.moTa.toString())),

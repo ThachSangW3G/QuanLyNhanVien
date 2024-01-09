@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/loaikyluat.model.dart';
+import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -17,8 +22,17 @@ class UpdateDisciplineTypeComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<UpdateDisciplineTypeComponent> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    String maLKL = widget.loaiKyLuat.maLKL;
+    String tenLKT = widget.loaiKyLuat.tenLKL;
+    int? soTienPhat = widget.loaiKyLuat.soTienPhat;
+    String moTa = widget.loaiKyLuat.moTa;
+    DateTime ngayTao = widget.loaiKyLuat.ngayTao.toDate();
+
+    final loaiKyLuatProvider = Provider.of<LoaiKyLuatProvider>(context);
+
     return AlertDialog(
       title: const Text(
         'Thêm loại kỷ luật',
@@ -54,20 +68,24 @@ class _AddBonusComponentState extends State<UpdateDisciplineTypeComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã Loại Kỷ Luật',
-                      name: '',
+                      label: 'Tên loại kỷ luật',
+                      name: tenLKT,
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        tenLKT = valua;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
                   InputTextField(
-                      label: 'Tên Loại Kỷ Luật',
-                      name: '',
+                      label: 'Số tiền phạt',
+                      name: soTienPhat.toString(),
                       isRequired: true,
                       hinttext: '',
-                      onChanged: (valua) {}),
+                      onChanged: (valua) {
+                        soTienPhat = int.tryParse(valua);
+                      }),
                 ],
               ),
               const SizedBox(
@@ -78,15 +96,17 @@ class _AddBonusComponentState extends State<UpdateDisciplineTypeComponent> {
                 children: [
                   InputTextMultiline(
                       label: 'Mô tả',
-                      name: '',
+                      name: moTa,
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
                   InputTimePicker(
                       label: 'Ngày tạo',
-                      name: '',
+                      name: DateFormat('dd/MM/yyyy').format(ngayTao),
                       hinttext: 'DD/MM/YYYY',
                       onChanged: (value) {}),
                 ],
@@ -107,12 +127,46 @@ class _AddBonusComponentState extends State<UpdateDisciplineTypeComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              final loaiKyLuat = LoaiKyLuat(
+                  maLKL: maLKL,
+                  moTa: moTa,
+                  tenLKL: tenLKT,
+                  soTienPhat: soTienPhat!,
+                  ngayTao: Timestamp.fromDate(ngayTao));
+              await loaiKyLuatProvider.updLoaiKyLuat(loaiKyLuat);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Cập nhật loại kỷ luật thành công!'));
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildFailedSnackbar('Cập nhật loại kỷ luật thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );
