@@ -258,7 +258,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                               checkKhenPhat = false;
                             });
                             Navigator.pushNamed(
-                                context, '/managerStaff/Timekeeping');
+                                context, '/managerStaff/TimeKeeping');
                           },
                         ),
                         ButtonComponent(

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/input.moth.component.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/chamcong.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/chamcong.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -16,11 +21,14 @@ class TimeKeeping extends StatefulWidget {
 }
 
 class _TimeKeepingState extends State<TimeKeeping> {
-  String? time = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  String? timeStaff;
+  DateTime? time = DateTime.now();
+
+  DateTime? timeForMonth = DateTime.now();
   String? maNV;
   @override
   Widget build(BuildContext context) {
+    final chamCongProvider = Provider.of<ChamCongProvider>(context);
+    final nhanVienProvider = Provider.of<NhanVienProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -60,7 +68,7 @@ class _TimeKeepingState extends State<TimeKeeping> {
                           ),
                         ),
                         Text(
-                          time!,
+                          DateFormat('MM/dd/yyyy').format(time!),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -75,11 +83,11 @@ class _TimeKeepingState extends State<TimeKeeping> {
                       children: [
                         InputTimePicker(
                             label: 'Ngày',
-                            name: time,
+                            name: DateFormat('MM/dd/yyyy').format(time!),
                             hinttext: 'DD/MM/YYYY',
                             onChanged: (value) {
                               setState(() {
-                                time = DateFormat('dd/MM/yyyy').format(value);
+                                time = value;
                               });
                             }),
                       ],
@@ -87,81 +95,97 @@ class _TimeKeepingState extends State<TimeKeeping> {
                     const SizedBox(
                       height: 20,
                     ),
-                    PaginatedDataTable(
-                      source: RowSource(
-                          myData: listChamCong, count: listChamCong.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 50,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã nhân viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Tên nhân viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày chấm công",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Thời gian vào",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian vào thực tế",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian ra",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian ra thực tế",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Trạng thái",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    StreamBuilder<List<ChamCong>>(
+                        stream: chamCongProvider.getChamCongByDate(time!),
+                        builder: (context, snapshot) {
+                          final listChamCong = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSource(
+                                myData: listChamCong,
+                                count: listChamCong?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 10,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã nhân viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Tên nhân viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày chấm công",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Thời gian vào",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian vào thực tế",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian ra",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian ra thực tế",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Trạng thái",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -199,26 +223,47 @@ class _TimeKeepingState extends State<TimeKeeping> {
                     ),
                     Row(
                       children: [
-                        InputSelect(
-                            list: list,
-                            selectedOption: '',
-                            onChanged: (value) {
-                              setState(() {
-                                maNV = value;
-                              });
-                            },
-                            label: 'Mã nhân viên',
-                            hinttext: ''),
+                        FutureBuilder<List<NhanVien>>(
+                            future: nhanVienProvider.getAllNhanVien(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final listNhanVien = snapshot.data;
+                                final List<String> listString = [];
+                                for (NhanVien nhanVien in listNhanVien!) {
+                                  listString.add(
+                                      nhanVien.maNV + ' - ' + nhanVien.hoTen);
+                                }
+                                return InputSelect(
+                                    list: listString,
+                                    label: 'Nhân Viên',
+                                    selectedOption: '',
+                                    onChanged: (value) {
+                                      final index = listString.indexOf(value);
+
+                                      setState(() {
+                                        maNV = listNhanVien[index].maNV;
+                                      });
+                                    },
+                                    hinttext: '--Chọn nhân viên--');
+                              } else {
+                                return InputSelect(
+                                    list: const [],
+                                    label: 'Nhân Viên',
+                                    selectedOption: '',
+                                    onChanged: (value) {},
+                                    hinttext: '--Chọn nhân viên--');
+                              }
+                            }),
                         const SizedBox(
                           width: 20,
                         ),
-                        InputTimePicker(
+                        InputMonthPicker(
                             label: 'Tháng',
-                            name: timeStaff,
-                            hinttext: 'DD/MM/YYYY',
+                            name: DateFormat('MM/yyyy').format(timeForMonth!),
+                            hinttext: 'MM/YYYY',
                             onChanged: (value) {
                               setState(() {
-                                timeStaff = DateFormat('MM/yyyy').format(value);
+                                timeForMonth = value;
                               });
                             }),
                       ],
@@ -226,67 +271,81 @@ class _TimeKeepingState extends State<TimeKeeping> {
                     const SizedBox(
                       height: 20,
                     ),
-                    PaginatedDataTable(
-                      source: RowSourceMonth(
-                          myData: listChamCong, count: listChamCong.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 50,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày chấm công",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Thời gian vào",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian vào thực tế",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian ra",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thời gian ra thực tế",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Trạng thái",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    StreamBuilder<List<ChamCong>>(
+                        stream: chamCongProvider.getChamCongByMaNVAndMonth(
+                            maNV ?? "NV000", timeForMonth!),
+                        builder: (context, snapshot) {
+                          final listChamCong = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSourceMonth(
+                                myData: listChamCong,
+                                count: listChamCong?.length ?? 0),
+                            rowsPerPage: 10,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày chấm công",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Thời gian vào",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian vào thực tế",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian ra",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Thời gian ra thực tế",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Trạng thái",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        })
                   ],
                 ),
               ),
@@ -301,15 +360,13 @@ class RowSource extends DataTableSource {
   final myData;
   // ignore: prefer_typing_uninitialized_variables
   final count;
-  RowSource({
-    required this.myData,
-    required this.count,
-  });
+  BuildContext context;
+  RowSource({required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index, context);
     } else {
       return null;
     }
@@ -325,18 +382,28 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
   final chamCong = data as ChamCong;
+  final nhanVienProvider = Provider.of<NhanVienProvider>(context);
   return DataRow(
     cells: [
-      DataCell(Text((listChamCong.indexOf(data) + 1).toString())),
-      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayCC.toDate()))),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(data.maNV.toString())),
-      const DataCell(Text('Nguyen Trung Tinh')),
-      DataCell(Text(changeTimestampToTime(chamCong.timeVao))),
-      DataCell(Text(changeTimestampToTime(chamCong.timeVaoTT))),
-      DataCell(Text(changeTimestampToTime(chamCong.timeRa))),
-      DataCell(Text(changeTimestampToTime(chamCong.timeRaTT))),
+      DataCell(FutureBuilder<NhanVien>(
+          future: nhanVienProvider.getNhanVien(data.maNV),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final nhanVien = snapshot.data;
+              return Text(nhanVien!.hoTen);
+            }
+            return Text('');
+          })),
+      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayCC.toDate()))),
+      DataCell(Text(DateFormat('HH:mm:ss').format(chamCong.timeVao.toDate()))),
+      DataCell(
+          Text(DateFormat('HH:mm:ss').format(chamCong.timeVaoTT.toDate()))),
+      DataCell(Text(DateFormat('HH:mm:ss').format(chamCong.timeRa.toDate()))),
+      DataCell(Text(DateFormat('HH:mm:ss').format(chamCong.timeRaTT.toDate()))),
       DataCell(Text(data.status))
     ],
   );
@@ -357,7 +424,7 @@ class RowSourceMonth extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRowMonth(myData![index]);
+      return recentFileDataRowMonth(myData![index], index);
     } else {
       return null;
     }
@@ -373,13 +440,13 @@ class RowSourceMonth extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRowMonth(var data) {
+DataRow recentFileDataRowMonth(var data, int index) {
   final chamCong = data as ChamCong;
   return DataRow(
     cells: [
-      DataCell(Text((listChamCong.indexOf(data) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayCC.toDate()))),
-      DataCell(Text(changeTimestampToTime(chamCong.timeVao))),
+      DataCell(Text(DateFormat('HH:mm:ss').format(chamCong.timeVao.toDate()))),
       DataCell(Text(changeTimestampToTime(chamCong.timeVaoTT))),
       DataCell(Text(changeTimestampToTime(chamCong.timeRa))),
       DataCell(Text(changeTimestampToTime(chamCong.timeRaTT))),
