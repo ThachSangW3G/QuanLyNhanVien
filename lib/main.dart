@@ -12,11 +12,8 @@ import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
 import 'package:quanlynhanvien/providers/yeucaunghiphep.provider.dart';
 import 'package:quanlynhanvien/routes/routes.dart';
-import 'package:quanlynhanvien/screens/login_screen.dart';
 
 import 'package:quanlynhanvien/firebase_options.dart';
-import 'package:quanlynhanvien/screens/manager_staff_screen.dart';
-import 'package:quanlynhanvien/screens/staff_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
