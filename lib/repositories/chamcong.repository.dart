@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:quanlynhanvien/models/chamcong.model.dart';
 
 abstract class ChamCongRepository {
@@ -61,6 +62,9 @@ class ChamCongRepositoryImpl implements ChamCongRepository {
     Timestamp startTimestamp = Timestamp.fromDate(firstDayOfMonth);
     Timestamp endTimestamp = Timestamp.fromDate(DateTime(lastDayOfMonth.year,
         lastDayOfMonth.month, lastDayOfMonth.day, 23, 59, 59, 999, 999));
+
+    print(DateFormat('dd/MM/yyy hh:mm:ss').format(startTimestamp.toDate()));
+    print(DateFormat('dd/MM/yyy hh:mm:ss').format(endTimestamp.toDate()));
     return chamCongs
         .where('ngayCC', isGreaterThanOrEqualTo: startTimestamp)
         .where('ngayCC', isLessThanOrEqualTo: endTimestamp)

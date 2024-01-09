@@ -5,6 +5,7 @@ class HopDongLaoDong {
   final String maNV;
   final Timestamp ngayBatDau;
   final Timestamp ngayKetThuc;
+  final double heSoLuong;
   final int luongCoBan;
 
   HopDongLaoDong(
@@ -12,7 +13,8 @@ class HopDongLaoDong {
       required this.maNV,
       required this.ngayBatDau,
       required this.ngayKetThuc,
-      required this.luongCoBan});
+      required this.luongCoBan,
+      required this.heSoLuong});
 
   factory HopDongLaoDong.fromJson(Map<String, dynamic> json) {
     return HopDongLaoDong(
@@ -20,7 +22,8 @@ class HopDongLaoDong {
         maNV: json['maNV'] ?? '',
         ngayBatDau: json['ngayBatDau'],
         ngayKetThuc: json['ngayKetThuc'],
-        luongCoBan: json['luongCoBan'] ?? 0);
+        luongCoBan: json['luongCoBan'] ?? 0,
+        heSoLuong: json['heSoLuong'] ?? 1);
   }
 
   Map<String, dynamic> toJson() {
@@ -29,7 +32,8 @@ class HopDongLaoDong {
       'maNV': maNV,
       'ngayBatDau': ngayBatDau,
       'ngayKetThuc': ngayKetThuc,
-      'luongCoBan': luongCoBan
+      'luongCoBan': luongCoBan,
+      'heSoLuong': heSoLuong
     };
   }
 }
@@ -40,9 +44,25 @@ List<HopDongLaoDong> listHDLD = [
       maNV: 'NV001',
       ngayBatDau: Timestamp.fromDate(DateTime.now()),
       ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000,
+      heSoLuong: 2),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      maNV: 'NV001',
+      heSoLuong: 2,
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
       luongCoBan: 5000000),
   HopDongLaoDong(
       maHD: 'HD001',
+      maNV: 'NV001',
+      heSoLuong: 2,
+      ngayBatDau: Timestamp.fromDate(DateTime.now()),
+      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
+      luongCoBan: 5000000),
+  HopDongLaoDong(
+      maHD: 'HD001',
+      heSoLuong: 2,
       maNV: 'NV001',
       ngayBatDau: Timestamp.fromDate(DateTime.now()),
       ngayKetThuc: Timestamp.fromDate(DateTime.now()),
@@ -50,24 +70,14 @@ List<HopDongLaoDong> listHDLD = [
   HopDongLaoDong(
       maHD: 'HD001',
       maNV: 'NV001',
+      heSoLuong: 2,
       ngayBatDau: Timestamp.fromDate(DateTime.now()),
       ngayKetThuc: Timestamp.fromDate(DateTime.now()),
       luongCoBan: 5000000),
   HopDongLaoDong(
       maHD: 'HD001',
       maNV: 'NV001',
-      ngayBatDau: Timestamp.fromDate(DateTime.now()),
-      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
-      luongCoBan: 5000000),
-  HopDongLaoDong(
-      maHD: 'HD001',
-      maNV: 'NV001',
-      ngayBatDau: Timestamp.fromDate(DateTime.now()),
-      ngayKetThuc: Timestamp.fromDate(DateTime.now()),
-      luongCoBan: 5000000),
-  HopDongLaoDong(
-      maHD: 'HD001',
-      maNV: 'NV001',
+      heSoLuong: 2,
       ngayBatDau: Timestamp.fromDate(DateTime.now()),
       ngayKetThuc: Timestamp.fromDate(DateTime.now()),
       luongCoBan: 5000000),
