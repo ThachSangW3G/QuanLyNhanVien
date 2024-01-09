@@ -3,7 +3,7 @@ import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/screens/tabs_staff/rest.tab.dart';
-import 'package:quanlynhanvien/screens/tabs_staff/timekeeping.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/change.user.tab.dart';
 import 'package:quanlynhanvien/screens/tabs_staff/wage.tab.dart';
 
 class StaffScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class StaffScreen extends StatefulWidget {
 class _StaffScreenState extends State<StaffScreen> {
   int? tabs;
 
-  List<String> pages = ['Wage', 'Rest', 'Timekeeping'];
+  List<String> pages = ['Wage', 'Rest', 'ChangeUser'];
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _StaffScreenState extends State<StaffScreen> {
                             setState(() {
                               tabs = 2;
                             });
-                            Navigator.pushNamed(context, '/staff/Timekeeping');
+                            Navigator.pushNamed(context, '/staff/ChangeUser');
                           },
                         ),
                       ],
@@ -97,7 +97,7 @@ class _StaffScreenState extends State<StaffScreen> {
                         children: const [
                           WageTab(),
                           RestTab(),
-                          TimeKeeping(),
+                          ChangeUser(),
                         ],
                       )),
                 )

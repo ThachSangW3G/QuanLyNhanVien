@@ -13,6 +13,7 @@ import 'package:quanlynhanvien/screens/tabs/leave.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/overview.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/position.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
+import 'package:quanlynhanvien/screens/tabs/timekeeping.tab.dart';
 import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
 class ManagerStaffScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
     'Decipline',
     'Leave',
     'Create-account',
+    'TimeKeeping'
   ];
 
   int? tabs;
@@ -258,6 +260,23 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                                 context, '/managerStaff/Create-account');
                           },
                         ),
+                        ButtonComponent(
+                          check: tabs == 10,
+                          iconDataStart: Icons.date_range_outlined,
+                          iconDataEnd: tabs == 10
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Danh sách chấm công',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 9;
+                              checkStaff = false;
+                              checkKhenPhat = false;
+                            });
+                            Navigator.pushNamed(
+                                context, '/managerStaff/Timekeeping');
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -277,7 +296,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                           BonusTab(),
                           DeciplineTab(),
                           LeaveTab(),
-                          CreateAccountTab()
+                          CreateAccountTab(),
+                          TimeKeeping()
                         ],
                       )),
                 )
