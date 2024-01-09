@@ -23,4 +23,18 @@ class NguoiDungProvider extends ChangeNotifier {
     print(_nguoiDung);
     notifyListeners();
   }
+
+  Future<void> addTaiKhoan(NguoiDung nguoiDung) async {
+    await nguoiDungRepository.addTaiKhoan(nguoiDung);
+    notifyListeners();
+  }
+
+  Future<NguoiDung?> getLastNguoiDung() {
+    return nguoiDungRepository.getLastNguoiDung();
+  }
+
+  Future<void> updTaiKhoan(NguoiDung nguoiDung) async {
+    await nguoiDungRepository.updTaiKhoan(nguoiDung);
+    notifyListeners();
+  }
 }

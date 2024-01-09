@@ -3,6 +3,9 @@ import 'package:quanlynhanvien/models/nguoidung.model.dart';
 
 abstract class NguoiDungRepository {
   Future<NguoiDung?> dangNhap(String tenDangNhap, String matKhau);
+  Future<void> addTaiKhoan(NguoiDung nguoiDung);
+  Future<NguoiDung?> getLastNguoiDung();
+  Future<void> updTaiKhoan(NguoiDung nguoiDung);
 }
 
 class NguoiDungRepositoryImpl implements NguoiDungRepository {
@@ -24,5 +27,36 @@ class NguoiDungRepositoryImpl implements NguoiDungRepository {
           snapshot.docs.first.data() as Map<String, dynamic>);
       return Future.value(data);
     });
+  }
+
+  @override
+  Future<void> addTaiKhoan(NguoiDung nguoiDung) {
+    return nguoiDungs
+        .doc(nguoiDung.maND)
+        .set(nguoiDung.toJson())
+        .then((value) => print('add nguoiDung successfully'));
+  }
+
+  @override
+  Future<NguoiDung?> getLastNguoiDung() async {
+    List<NguoiDung> listLKT = [];
+    await nguoiDungs
+        .orderBy('maND', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT.add(NguoiDung.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
+  }
+
+  @override
+  Future<void> updTaiKhoan(NguoiDung nguoiDung) {
+    return nguoiDungs
+        .doc(nguoiDung.maND)
+        .update(nguoiDung.toJson())
+        .then((value) => print('update ChucVu succcessfully'));
   }
 }

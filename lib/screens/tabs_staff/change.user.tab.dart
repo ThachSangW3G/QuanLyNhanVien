@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 
 class ChangeUser extends StatefulWidget {
   const ChangeUser({super.key});
@@ -11,8 +15,15 @@ class ChangeUser extends StatefulWidget {
 }
 
 class _TimeKeepingState extends State<ChangeUser> {
+  String? matKhauHienTai;
+  String? matKhauMoi;
+  String? matKhauMoi2;
+
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
+    final nguoiDungProvider = Provider.of<NguoiDungProvider>(context);
     return Scaffold(
         body: Padding(
       padding: EdgeInsets.symmetric(
@@ -81,11 +92,14 @@ class _TimeKeepingState extends State<ChangeUser> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InputTextField(
-                              label: 'Tên Đăng Nhập',
+                              label: 'Nhập mật khẩu hiện tại',
                               name: '',
-                              hinttext: 'nguyenvana123',
+                              hinttext: '',
                               isRequired: true,
-                              onChanged: (value) {}),
+                              obscureText: true,
+                              onChanged: (value) {
+                                matKhauHienTai = value;
+                              }),
                         ]),
                     const SizedBox(
                       height: 25,
@@ -94,24 +108,85 @@ class _TimeKeepingState extends State<ChangeUser> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InputTextField(
-                            label: 'Mật khẩu',
+                            label: 'Nhập mật khẩu mới',
                             name: '',
-                            hinttext: '123456789',
+                            hinttext: '',
                             isRequired: true,
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              matKhauMoi = value;
+                            }),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputTextField(
+                            label: 'Nhập lại mật khẩu mới',
+                            name: '',
+                            hinttext: '',
+                            isRequired: true,
+                            onChanged: (value) {
+                              matKhauMoi2 = value;
+                            }),
                       ],
                     ),
                     const SizedBox(
                       height: 25,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          setState(() {
+                            loading = true;
+                          });
+                          final nguoiDung = nguoiDungProvider.nguoiDung!;
+                          if (matKhauHienTai == nguoiDung.matKhau &&
+                              matKhauMoi == matKhauMoi2) {
+                            nguoiDung.matKhau = matKhauMoi!;
+                            await nguoiDungProvider.updTaiKhoan(nguoiDung);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                buildSuccessSnackbar(
+                                    'Thay đổi mật khẩu thành công!'));
+                          } else if (matKhauHienTai != nguoiDung.matKhau) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                buildFailedSnackbar(
+                                    'Mật khẩu hiện tại không đúng!'));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                buildFailedSnackbar(
+                                    'Mật khẩu mới không khớp!'));
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              buildFailedSnackbar(
+                                  'Thay đổi mật khẩu thất bại!'));
+                        }
+                        setState(() {
+                          loading = false;
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.bluedarkColor,
                       ),
-                      child: const Text('Lưu',
-                          style: TextStyle(
-                              fontFamily: 'CeraPro', color: AppColors.white)),
+                      child: loading
+                          ? const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: SizedBox(
+                                height: 10,
+                                width: 10,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          : const Text('Lưu',
+                              style: TextStyle(
+                                  fontFamily: 'CeraPro',
+                                  color: AppColors.white)),
                     ),
                   ],
                 ),

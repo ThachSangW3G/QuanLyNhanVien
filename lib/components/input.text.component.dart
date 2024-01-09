@@ -4,10 +4,11 @@ import 'package:quanlynhanvien/constants/app_colors.dart';
 class InputTextField extends StatefulWidget {
   final String label;
   final String hinttext;
-  final String name;
+  String name;
   final bool isRequired;
   final ValueChanged<String> onChanged;
   bool? readOnly;
+  bool? obscureText;
 
   InputTextField(
       {super.key,
@@ -16,7 +17,8 @@ class InputTextField extends StatefulWidget {
       required this.hinttext,
       required this.isRequired,
       required this.onChanged,
-      this.readOnly});
+      this.readOnly,
+      this.obscureText});
 
   @override
   State<InputTextField> createState() => _InputTextFieldState();
@@ -44,6 +46,10 @@ class _InputTextFieldState extends State<InputTextField> {
             height: 16,
           ),
           TextFormField(
+              obscureText:
+                  widget.obscureText != null && widget.obscureText == true
+                      ? true
+                      : false,
               readOnly: widget.readOnly != null && widget.readOnly == true
                   ? true
                   : false,

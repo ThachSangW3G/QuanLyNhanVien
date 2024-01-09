@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:quanlynhanvien/components/input.select.data.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
 import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
+import 'package:quanlynhanvien/models/nguoidung.model.dart';
 import 'package:quanlynhanvien/models/nhanvien.model.dart';
 import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
+import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/screens/tabs/createaccount.tab.dart';
 import 'package:quanlynhanvien/services/getlastthreechar.dart';
@@ -31,13 +34,12 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
   @override
   Widget build(BuildContext context) {
     String? maNV;
-    String? maLKT;
-    String? moTa;
-    DateTime? ngayKT;
+    String? tenDangNhap;
+    String? matKhau;
+    String? loaiND;
 
-    final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
     final nhanVienProvider = Provider.of<NhanVienProvider>(context);
-    final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+    final nguoiDungProvider = Provider.of<NguoiDungProvider>(context);
 
     return AlertDialog(
       title: const Text(
@@ -85,20 +87,50 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InputSelect(
-                        list: listNV,
-                        label: 'Nhân Viên',
-                        selectedOption: '',
-                        onChanged: (value) {},
-                        hinttext: '--Chọn mã nhân viên--'),
+                    FutureBuilder<List<NhanVien>>(
+                        future: nhanVienProvider.getAllNhanVien(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final listNhanVien = snapshot.data;
+                            final List<String> listString = [];
+                            for (NhanVien nhanVien in listNhanVien!) {
+                              listString
+                                  .add(nhanVien.maNV + ' - ' + nhanVien.hoTen);
+                            }
+                            return InputSelect(
+                                list: listString,
+                                label: 'Nhân Viên',
+                                selectedOption: '',
+                                onChanged: (value) {
+                                  final index = listString.indexOf(value);
+                                  maNV = listNhanVien[index].maNV;
+                                },
+                                hinttext: '--Chọn mã nhân viên--');
+                          } else {
+                            return InputSelect(
+                                list: const [],
+                                label: 'Nhân Viên',
+                                selectedOption: '',
+                                onChanged: (value) {},
+                                hinttext: '--Chọn nhân viên--');
+                          }
+                        }),
                     const SizedBox(
                       width: 45,
                     ),
                     InputSelect(
-                        list: listNV,
+                        list: listLoaiNguoiDung,
                         label: 'Loại người dùng',
                         selectedOption: '',
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          if (value == 'Quản lý nhân sự') {
+                            loaiND = 'manager';
+                          } else if (value == 'Quản lý tài chính') {
+                            loaiND = 'financial';
+                          } else {
+                            loaiND = 'staff';
+                          }
+                        },
                         hinttext: '--Chọn loại người dùng--'),
                   ],
                 ),
@@ -114,9 +146,7 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
                         hinttext: 'nguyenvana123',
                         isRequired: true,
                         onChanged: (value) {
-                          // setState(() {
-                          //   tenDangNhap = value;
-                          // });
+                          tenDangNhap = value;
                         }),
                     const SizedBox(
                       width: 45,
@@ -126,7 +156,9 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
                         name: '',
                         hinttext: '123456789',
                         isRequired: true,
-                        onChanged: (value) {})
+                        onChanged: (value) {
+                          matKhau = value;
+                        })
                   ],
                 ),
               ],
@@ -151,30 +183,30 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
               setState(() {
                 loading = true;
               });
-              KhenThuong? lastiKhenThuong =
-                  await khenThuongProvider.getLastKhenThuong();
+              NguoiDung? lastiKhenThuong =
+                  await nguoiDungProvider.getLastNguoiDung();
 
               int soThuTu = lastiKhenThuong != null
-                  ? getLastThreeCharsAsInteger(lastiKhenThuong.maKT) + 1
+                  ? getLastThreeCharsAsInteger(lastiKhenThuong.maND) + 1
                   : 0;
 
-              String maKT = 'KT' + soThuTu.toString().padLeft(3, '0');
+              String maND = 'ND' + soThuTu.toString().padLeft(3, '0');
 
-              final khenThuong = KhenThuong(
-                  maKT: maKT,
+              final nguoiDung = NguoiDung(
+                  maND: maND,
                   maNV: maNV!,
-                  maLKT: maLKT!,
-                  moTa: moTa!,
-                  ngayKT: Timestamp.fromDate(ngayKT!));
+                  tenDangNhap: tenDangNhap!,
+                  matKhau: matKhau!,
+                  loaiND: loaiND!);
 
-              await khenThuongProvider.addKhenThuong(khenThuong);
+              await nguoiDungProvider.addTaiKhoan(nguoiDung);
 
               ScaffoldMessenger.of(context).showSnackBar(
-                  buildSuccessSnackbar('Thêm khen thưởng thành công!'));
+                  buildSuccessSnackbar('Thêm tài khoản thành công!'));
             } catch (e) {
               print(e);
               ScaffoldMessenger.of(context).showSnackBar(
-                  buildFailedSnackbar('Thêm khen thưởng thất bại!'));
+                  buildFailedSnackbar('Thêm tài khoản thất bại!'));
             }
             setState(() {
               loading = false;
@@ -204,4 +236,8 @@ class _AddBonusComponentState extends State<AddAccountComponent> {
   }
 }
 
-List<String> list = ['NV001  Nguyen Trung Tinh', 'NV002 - Thach A Sang'];
+List<String> listLoaiNguoiDung = [
+  'Quản lý nhân sự',
+  'Quản lý tài chính',
+  'Nhân viên'
+];
