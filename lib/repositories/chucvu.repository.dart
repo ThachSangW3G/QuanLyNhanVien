@@ -4,7 +4,7 @@ import 'package:quanlynhanvien/models/chucvu.model.dart';
 abstract class ChucVuRepository {
   Future<void> addChucVu(ChucVu chucVu);
   Future<List<ChucVu>> getAllChucVu();
-  Future<ChucVu> getChucVu(String maCV);
+  Future<ChucVu?> getChucVu(String maCV);
   Future<void> delChucVu(String maCV);
   Future<void> updChucVu(ChucVu chucVu);
 }
@@ -42,7 +42,7 @@ class ChucVuRepositoryImpl implements ChucVuRepository {
   }
 
   @override
-  Future<ChucVu> getChucVu(String maCV) async {
+  Future<ChucVu?> getChucVu(String maCV) async {
     return await chucVus.doc(maCV).get().then((DocumentSnapshot doc) {
       final data = ChucVu.fromJson(doc.data() as Map<String, dynamic>);
       return Future.value(data);

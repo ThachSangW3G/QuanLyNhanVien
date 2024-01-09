@@ -24,7 +24,7 @@ class _TimeKeepingState extends State<TimeKeeping> {
   DateTime? time = DateTime.now();
 
   DateTime? timeForMonth = DateTime.now();
-  String? maNV;
+  String maNV = "NV000";
   @override
   Widget build(BuildContext context) {
     final chamCongProvider = Provider.of<ChamCongProvider>(context);
@@ -241,7 +241,10 @@ class _TimeKeepingState extends State<TimeKeeping> {
                                       final index = listString.indexOf(value);
 
                                       setState(() {
+                                        print(maNV);
                                         maNV = listNhanVien[index].maNV;
+                                        print(1);
+                                        print(maNV);
                                       });
                                     },
                                     hinttext: '--Chọn nhân viên--');
@@ -273,9 +276,10 @@ class _TimeKeepingState extends State<TimeKeeping> {
                     ),
                     StreamBuilder<List<ChamCong>>(
                         stream: chamCongProvider.getChamCongByMaNVAndMonth(
-                            maNV ?? "NV000", timeForMonth!),
+                            maNV, timeForMonth!),
                         builder: (context, snapshot) {
                           final listChamCong = snapshot.data;
+                          //print(listChamCong);
                           return PaginatedDataTable(
                             source: RowSourceMonth(
                                 myData: listChamCong,

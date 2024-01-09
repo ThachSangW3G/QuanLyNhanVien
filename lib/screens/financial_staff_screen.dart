@@ -3,6 +3,8 @@ import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/screens/tabs_financial/allowance.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_financial/manager.salaryexport.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_financial/manager.salarytable.tab.dart';
 import 'package:quanlynhanvien/screens/tabs_financial/manager.tax.dart';
 import 'package:quanlynhanvien/screens/tabs_financial/manager.wage.tab.dart';
 
@@ -17,7 +19,13 @@ class FinancialScreen extends StatefulWidget {
 class _FinancialScreenState extends State<FinancialScreen> {
   int? tabs;
 
-  List<String> pages = ['managerWage', 'allowance', 'managerTax'];
+  List<String> pages = [
+    'managerWage',
+    'allowance',
+    'managerTax',
+    'salaryExport',
+    'salaryTable'
+  ];
   @override
   Widget build(BuildContext context) {
     tabs = pages.indexOf(widget.page);
@@ -87,6 +95,36 @@ class _FinancialScreenState extends State<FinancialScreen> {
                                 context, '/financial/managerTax');
                           },
                         ),
+                        ButtonComponent(
+                          check: tabs == 3,
+                          iconDataStart: Icons.account_balance_wallet_sharp,
+                          iconDataEnd: tabs == 3
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Xuất lương',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 3;
+                            });
+                            Navigator.pushNamed(
+                                context, '/financial/salaryExport');
+                          },
+                        ),
+                        ButtonComponent(
+                          check: tabs == 4,
+                          iconDataStart: Icons.account_balance_wallet_sharp,
+                          iconDataEnd: tabs == 4
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Bảng lương',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 4;
+                            });
+                            Navigator.pushNamed(
+                                context, '/financial/salaryTable');
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -100,6 +138,8 @@ class _FinancialScreenState extends State<FinancialScreen> {
                           ManagerWageTab(),
                           AllowanceTab(),
                           ManagerTaxTab(),
+                          ManagerSalaryExportTab(),
+                          ManagerSalaryTableTab()
                         ],
                       )),
                 )

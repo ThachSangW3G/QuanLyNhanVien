@@ -35,4 +35,8 @@ class KhenThuongProvider extends ChangeNotifier {
   Future<KhenThuong?> getLastKhenThuong() {
     return khenThuongRepository.getLastKhenThuong();
   }
+
+  Future<int> getTongTienThuong(String maNV, DateTime specificDate) {
+    return khenThuongRepository.getTongTienThuong(maNV, specificDate);
+  }
 }

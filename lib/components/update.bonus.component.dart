@@ -33,6 +33,7 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
     String maLKT = widget.khenThuong.maLKT;
     String maNV = widget.khenThuong.maNV;
     String moTa = widget.khenThuong.moTa;
+    int soTienThuong = widget.khenThuong.soTienThuong;
     DateTime ngayKT = widget.khenThuong.ngayKT.toDate();
 
     final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
@@ -126,6 +127,9 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
                               selectedOption: maLKT,
                               onChanged: (value) {
                                 maLKT = value;
+                                soTienThuong = listLoaiKhenThuong[
+                                        listString.indexOf(maLKT)]
+                                    .soTienThuong;
                               },
                               hinttext: '--Chọn loại khen thưởng--');
                         } else {
@@ -190,6 +194,7 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
                   maNV: maNV,
                   maLKT: maLKT,
                   moTa: moTa,
+                  soTienThuong: soTienThuong,
                   ngayKT: Timestamp.fromDate(ngayKT));
               await khenThuongProvider.updKhenThuong(khenThuong);
               ScaffoldMessenger.of(context).showSnackBar(

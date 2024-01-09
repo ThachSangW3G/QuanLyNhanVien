@@ -11,6 +11,7 @@ import 'package:quanlynhanvien/models/nhanvien.model.dart';
 import 'package:quanlynhanvien/providers/kyluat.provider.dart';
 import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phieuluong.provider.dart';
 import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
@@ -31,10 +32,12 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
     String? maLKL;
     String? moTa;
     DateTime? ngayKL;
+    int? soTienPhat;
 
     final kyLuatProvider = Provider.of<KyLuatProvider>(context);
     final nhanVienProvider = Provider.of<NhanVienProvider>(context);
     final loaiKyLuatProvider = Provider.of<LoaiKyLuatProvider>(context);
+    final phieuLuongProvider = Provider.of<PhieuLuongProvider>(context);
 
     return AlertDialog(
       title: const Text(
@@ -118,6 +121,7 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
                               onChanged: (value) {
                                 final index = listString.indexOf(value);
                                 maLKL = listLoaiKyLuat[index].maLKL;
+                                soTienPhat = listLoaiKyLuat[index].soTienPhat;
                               },
                               hinttext: '--Chọn loại kỷ luật--');
                         } else {
@@ -190,9 +194,17 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
                   maNV: maNV!,
                   maLKL: maLKL!,
                   moTa: moTa!,
+                  soTienPhat: soTienPhat!,
                   ngayKL: Timestamp.fromDate(ngayKL!));
 
               await kyLuatProvider.addKyLuat(kyLuat);
+
+              final phieuLuong = await phieuLuongProvider
+                  .getPhieuLuong('PL${ngayKL!.month}-${ngayKL!.year}-${maNV}');
+
+              phieuLuong.kyLuat += soTienPhat!;
+
+              await phieuLuongProvider.updPhieuLuong(phieuLuong);
 
               ScaffoldMessenger.of(context).showSnackBar(
                   buildSuccessSnackbar('Thêm ky luật thành công!'));

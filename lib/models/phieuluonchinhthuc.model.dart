@@ -1,4 +1,4 @@
-class PhieuLuong {
+class PhieuLuongChinhThuc {
   final String maPL;
   final String maNV;
   int luongCoBan;
@@ -11,7 +11,7 @@ class PhieuLuong {
   int soNgayCong;
   double luong;
 
-  PhieuLuong({
+  PhieuLuongChinhThuc({
     required this.maPL,
     required this.maNV,
     required this.luongCoBan,
@@ -41,8 +41,8 @@ class PhieuLuong {
     };
   }
 
-  factory PhieuLuong.fromJson(Map<String, dynamic> json) {
-    return PhieuLuong(
+  factory PhieuLuongChinhThuc.fromJson(Map<String, dynamic> json) {
+    return PhieuLuongChinhThuc(
       maPL: json['maPL'] ?? '',
       maNV: json['maNV'] ?? '',
       luongCoBan: json['luongCoBan'] ?? '',

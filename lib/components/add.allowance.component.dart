@@ -1,9 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.number.component.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.multiline.component.dart';
 import 'package:quanlynhanvien/components/input.time.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/models/phucap.model.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phieuluong.provider.dart';
+import 'package:quanlynhanvien/providers/phucap.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 class AddAllowanceComponent extends StatefulWidget {
   const AddAllowanceComponent({super.key});
@@ -13,8 +23,17 @@ class AddAllowanceComponent extends StatefulWidget {
 }
 
 class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    String? maNV;
+    String? maPV;
+    int? soTien;
+    String? moTa;
+    DateTime? ngayPC;
+    final nhanVienProvider = Provider.of<NhanVienProvider>(context);
+    final phuCapProvider = Provider.of<PhuCapProvider>(context);
+    final phieuLuongProvider = Provider.of<PhieuLuongProvider>(context);
     return AlertDialog(
       title: const Text(
         'Thêm phụ cấp',
@@ -46,12 +65,34 @@ class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
           child: Column(
             children: [
               Row(children: [
-                InputSelect(
-                    list: list,
-                    selectedOption: '',
-                    onChanged: (value) {},
-                    label: 'Nhân viên',
-                    hinttext: ''),
+                FutureBuilder<List<NhanVien>>(
+                    future: nhanVienProvider.getAllNhanVien(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final listNhanVien = snapshot.data;
+                        final List<String> listString = [];
+                        for (NhanVien nhanVien in listNhanVien!) {
+                          listString
+                              .add(nhanVien.maNV + ' - ' + nhanVien.hoTen);
+                        }
+                        return InputSelect(
+                            list: listString,
+                            label: 'Nhân Viên',
+                            selectedOption: '',
+                            onChanged: (value) {
+                              final index = listString.indexOf(value);
+                              maNV = listNhanVien[index].maNV;
+                            },
+                            hinttext: '--Chọn nhân viên--');
+                      } else {
+                        return InputSelect(
+                            list: const [],
+                            label: 'Nhân Viên',
+                            selectedOption: '',
+                            onChanged: (value) {},
+                            hinttext: '--Chọn nhân viên--');
+                      }
+                    }),
                 const SizedBox(
                   width: 15,
                 ),
@@ -59,7 +100,9 @@ class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
                     label: 'Số tiền',
                     name: '',
                     hinttext: '',
-                    onChanged: (value) {})
+                    onChanged: (value) {
+                      soTien = int.tryParse(value);
+                    })
               ]),
               const SizedBox(
                 height: 45,
@@ -69,7 +112,9 @@ class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
                     label: 'Ngày phụ cấp',
                     name: '',
                     hinttext: '',
-                    onChanged: (value) {}),
+                    onChanged: (value) {
+                      ngayPC = value;
+                    }),
                 const SizedBox(
                   width: 15,
                 ),
@@ -77,7 +122,9 @@ class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
                     label: 'Mô tả',
                     name: '',
                     hinttext: '',
-                    onChanged: (value) {})
+                    onChanged: (value) {
+                      moTa = value;
+                    })
               ]),
             ],
           ),
@@ -95,14 +142,64 @@ class _AddAllowanceComponentState extends State<AddAllowanceComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              PhuCap? lastPhuCap = await phuCapProvider.getLastPhuCap();
+
+              int soThuTu = lastPhuCap != null
+                  ? getLastThreeCharsAsInteger(lastPhuCap.maPC) + 1
+                  : 0;
+
+              String maPC = 'PC' + soThuTu.toString().padLeft(3, '0');
+
+              final phuCap = PhuCap(
+                  maPC: maPC,
+                  maNV: maNV!,
+                  soTien: soTien!,
+                  moTa: moTa!,
+                  ngayPC: Timestamp.fromDate(ngayPC!));
+
+              await phuCapProvider.addPhuCap(phuCap);
+
+              final phieuLuong = await phieuLuongProvider
+                  .getPhieuLuong('PL${ngayPC!.month}-${ngayPC!.year}-${maNV}');
+
+              phieuLuong.phuCap += soTien!;
+
+              await phieuLuongProvider.updPhieuLuong(phieuLuong);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm phụ cấp thành công!'));
+            } catch (e) {
+              print(e);
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(buildFailedSnackbar('Thêm phụ cấp thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
             Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );

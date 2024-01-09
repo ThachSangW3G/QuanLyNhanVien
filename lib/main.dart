@@ -9,7 +9,10 @@ import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
 import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phieuluong.provider.dart';
+import 'package:quanlynhanvien/providers/phieuluongchinhthuc.provider.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
+import 'package:quanlynhanvien/providers/phucap.provider.dart';
 import 'package:quanlynhanvien/providers/yeucaunghiphep.provider.dart';
 import 'package:quanlynhanvien/routes/routes.dart';
 
@@ -32,7 +35,10 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => KyLuatProvider()),
       ChangeNotifierProvider(create: (_) => YeuCauNghiPhepProvider()),
       ChangeNotifierProvider(create: (_) => NguoiDungProvider()),
-      ChangeNotifierProvider(create: (_) => ChamCongProvider())
+      ChangeNotifierProvider(create: (_) => ChamCongProvider()),
+      ChangeNotifierProvider(create: (_) => PhieuLuongProvider()),
+      ChangeNotifierProvider(create: (_) => PhieuLuongChinhThucProvider()),
+      ChangeNotifierProvider(create: (_) => PhuCapProvider())
     ],
     child: MyApp(),
   ));
