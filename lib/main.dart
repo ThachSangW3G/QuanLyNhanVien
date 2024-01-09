@@ -9,6 +9,7 @@ import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
 import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
+import 'package:quanlynhanvien/providers/yeucaunghiphep.provider.dart';
 import 'package:quanlynhanvien/routes/routes.dart';
 import 'package:quanlynhanvien/screens/login_screen.dart';
 
@@ -30,7 +31,8 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => LoaiKhenThuongProvider()),
       ChangeNotifierProvider(create: (_) => KhenThuongProvider()),
       ChangeNotifierProvider(create: (_) => LoaiKyLuatProvider()),
-      ChangeNotifierProvider(create: (_) => KyLuatProvider())
+      ChangeNotifierProvider(create: (_) => KyLuatProvider()),
+      ChangeNotifierProvider(create: (_) => YeuCauNghiPhepProvider())
     ],
     child: MyApp(),
   ));

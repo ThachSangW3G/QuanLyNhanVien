@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
 import 'package:quanlynhanvien/models/yeucaunghiphep.model.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/yeucaunghiphep.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -10,6 +15,7 @@ class LeaveTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final yeuCauNghiPhepProvider = Provider.of<YeuCauNghiPhepProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -49,75 +55,89 @@ class LeaveTab extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    PaginatedDataTable(
-                      source: RowSource(
-                          myData: listYeuCauNghiPhep,
-                          count: listYeuCauNghiPhep.length),
-                      rowsPerPage: 10,
-                      columnSpacing: 50,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã nhân viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên nhân viên",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Ngày bắt đầu",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Ngày kết thúc",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Lý do",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Trạng thái",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Quyết định",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    StreamBuilder<List<YeuCauNghiPhep>>(
+                        stream: yeuCauNghiPhepProvider.getAllYeuCauNghiPhep(),
+                        builder: (context, snapshot) {
+                          final listYCNP = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSource(
+                                myData: listYCNP,
+                                count: listYCNP?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 10,
+                            columnSpacing: 50,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã nhân viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên nhân viên",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Ngày bắt đầu",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Ngày kết thúc",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Lý do",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Trạng thái",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Quyết định",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -135,7 +155,9 @@ class RowSource extends DataTableSource {
   final myData;
   // ignore: prefer_typing_uninitialized_variables
   final count;
+  BuildContext context;
   RowSource({
+    required this.context,
     required this.myData,
     required this.count,
   });
@@ -143,7 +165,7 @@ class RowSource extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index, context);
     } else {
       return null;
     }
@@ -159,17 +181,27 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
-  final khenThuong = data as YeuCauNghiPhep;
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
+  final yeuCauNghiPhepProvider = Provider.of<YeuCauNghiPhepProvider>(context);
+  final nhanVienProvider = Provider.of<NhanVienProvider>(context);
+  final yeuCauNghiPhep = data;
   return DataRow(
     cells: [
-      DataCell(Text((listYeuCauNghiPhep.indexOf(khenThuong) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(SizedBox(width: 100, child: Text(data.maNV.toString()))),
-      const DataCell(Text('Nguyễn Trung Tính')),
-      DataCell(Text(data.lyDo.toString())),
+      DataCell(FutureBuilder<NhanVien>(
+          future: nhanVienProvider.getNhanVien(data.maNV),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final nhanVien = snapshot.data;
+              return Text(nhanVien!.hoTen);
+            }
+            return Text('');
+          })),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayBatDau.toDate()))),
       DataCell(
           Text(DateFormat('MM/dd/yyyy').format(data.ngayKetThuc.toDate()))),
+      DataCell(Text(data.lyDo.toString())),
       DataCell(Text(data.trangThai.toString())),
       if (data.trangThai.toString() == 'Đã duyệt')
         DataCell(Container())
@@ -183,14 +215,22 @@ DataRow recentFileDataRow(var data) {
                 Icons.check_circle_outline,
                 color: Colors.green,
               ),
-              onPressed: () {},
+              onPressed: () {
+                yeuCauNghiPhep.trangThai = 'Đã duyệt';
+                yeuCauNghiPhep.ngayDuyet = Timestamp.fromDate(DateTime.now());
+                yeuCauNghiPhepProvider.updYeuCauNghiPhep(yeuCauNghiPhep);
+              },
             ),
             IconButton(
               icon: const Icon(
                 Icons.highlight_off_outlined,
                 color: Colors.red,
               ),
-              onPressed: () {},
+              onPressed: () {
+                yeuCauNghiPhep.trangThai = 'Không được duyệt';
+                yeuCauNghiPhep.ngayDuyet = Timestamp.fromDate(DateTime.now());
+                yeuCauNghiPhepProvider.updYeuCauNghiPhep(yeuCauNghiPhep);
+              },
             ),
           ],
         ))

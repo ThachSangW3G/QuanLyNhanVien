@@ -199,7 +199,7 @@ DataRow recentFileDataRow(var data) {
         )
       else
         const DataCell(Text('Đã gửi')),
-      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayduyet.toDate()))),
+      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayDuyet.toDate()))),
     ],
   );
 }
