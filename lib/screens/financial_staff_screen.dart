@@ -78,7 +78,7 @@ class _FinancialScreenState extends State<FinancialScreen> {
                           iconDataEnd: tabs == 2
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
-                          title: 'Thuế thu nhập cá nhân',
+                          title: 'Thay đổi qui định',
                           onPressed: () {
                             setState(() {
                               tabs = 2;
