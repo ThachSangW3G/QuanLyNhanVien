@@ -2,7 +2,7 @@ class NguoiDung {
   final String maND;
   final String maNV;
   final String tenDangNhap;
-  final String matKhau;
+  String matKhau;
   final String loaiND;
 
   NguoiDung(

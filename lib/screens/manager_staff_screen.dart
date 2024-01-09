@@ -14,6 +14,7 @@ import 'package:quanlynhanvien/screens/tabs/overview.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/position.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/addstaff.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/timekeeping.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/change.user.tab.dart';
 import 'package:quanlynhanvien/widgets/staff_widget.dart';
 
 class ManagerStaffScreen extends StatefulWidget {
@@ -38,8 +39,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
     'Bonus',
     'Decipline',
     'Leave',
-    'Create-account',
-    'TimeKeeping'
+    'TimeKeeping',
+    'ChangeUser'
   ];
 
   int? tabs;
@@ -245,25 +246,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                         ),
                         ButtonComponent(
                           check: tabs == 9,
-                          iconDataStart: Icons.person_add,
-                          iconDataEnd: tabs == 9
-                              ? Icons.keyboard_arrow_right
-                              : Icons.keyboard_arrow_left,
-                          title: 'Tạo tài khoản',
-                          onPressed: () {
-                            setState(() {
-                              tabs = 9;
-                              checkStaff = false;
-                              checkKhenPhat = false;
-                            });
-                            Navigator.pushNamed(
-                                context, '/managerStaff/Create-account');
-                          },
-                        ),
-                        ButtonComponent(
-                          check: tabs == 10,
                           iconDataStart: Icons.date_range_outlined,
-                          iconDataEnd: tabs == 10
+                          iconDataEnd: tabs == 9
                               ? Icons.keyboard_arrow_right
                               : Icons.keyboard_arrow_left,
                           title: 'Danh sách chấm công',
@@ -275,6 +259,23 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                             });
                             Navigator.pushNamed(
                                 context, '/managerStaff/Timekeeping');
+                          },
+                        ),
+                        ButtonComponent(
+                          check: tabs == 10,
+                          iconDataStart: Icons.cached,
+                          iconDataEnd: tabs == 10
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Thay đổi mật khẩu',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 10;
+                              checkStaff = false;
+                              checkKhenPhat = false;
+                            });
+                            Navigator.pushNamed(
+                                context, '/managerStaff/ChangeUser');
                           },
                         ),
                       ],
@@ -296,8 +297,8 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
                           BonusTab(),
                           DeciplineTab(),
                           LeaveTab(),
-                          CreateAccountTab(),
-                          TimeKeeping()
+                          TimeKeeping(),
+                          ChangeUser()
                         ],
                       )),
                 )

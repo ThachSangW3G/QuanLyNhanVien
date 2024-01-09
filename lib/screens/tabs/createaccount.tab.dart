@@ -83,7 +83,7 @@ class _CreateAccountTabState extends State<CreateAccountTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InputSelect(
-                            list: listNV,
+                            list: listLoaiNguoiDung,
                             label: 'Nhân Viên',
                             selectedOption: '',
                             onChanged: (value) {},
@@ -92,7 +92,7 @@ class _CreateAccountTabState extends State<CreateAccountTab> {
                           width: 45,
                         ),
                         InputSelect(
-                            list: listNV,
+                            list: listLoaiNguoiDung,
                             label: 'Loại người dùng',
                             selectedOption: '',
                             onChanged: (value) {},
@@ -151,4 +151,8 @@ class _CreateAccountTabState extends State<CreateAccountTab> {
   }
 }
 
-List<String> listNV = ['NV001', 'NV002'];
+List<String> listLoaiNguoiDung = [
+  'Quản lý nhân sự',
+  'Quản lý tài chính',
+  'Nhân viên'
+];

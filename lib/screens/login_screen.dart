@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/chucvu.model.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
@@ -15,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   String? _username;
   String? _password;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -133,25 +135,42 @@ class _LoginScreenState extends State<LoginScreen> {
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: InkWell(
-                                  onTap: () {
-                                    nguoiDungProvider.dangNhap(
-                                        _username!, _password!);
+                                  onTap: () async {
+                                    try {
+                                      setState(() {
+                                        loading = true;
+                                      });
+                                      await nguoiDungProvider.dangNhap(
+                                          _username!, _password!);
 
-                                    if (nguoiDungProvider.isLoggedIn) {
-                                      if (nguoiDungProvider.nguoiDung!.loaiND ==
-                                          'manager') {
-                                        Navigator.pushNamed(
-                                            context, '/managerStaff/Overview');
-                                      } else if (nguoiDungProvider
-                                              .nguoiDung!.loaiND ==
-                                          'financial') {
-                                        Navigator.pushNamed(
-                                            context, '/financial/Overview');
+                                      if (nguoiDungProvider.isLoggedIn) {
+                                        if (nguoiDungProvider
+                                                .nguoiDung!.loaiND ==
+                                            'manager') {
+                                          Navigator.pushNamed(context,
+                                              '/managerStaff/Overview');
+                                        } else if (nguoiDungProvider
+                                                .nguoiDung!.loaiND ==
+                                            'financial') {
+                                          Navigator.pushNamed(
+                                              context, '/financial/Overview');
+                                        } else {
+                                          Navigator.pushNamed(
+                                              context, '/staff/Wage');
+                                        }
                                       } else {
-                                        Navigator.pushNamed(
-                                            context, '/staff/Wage');
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(buildFailedSnackbar(
+                                                'Đăng nhập không thành công!'));
                                       }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(buildFailedSnackbar(
+                                              'Đăng nhập không thành công!'));
                                     }
+                                    setState(() {
+                                      loading = false;
+                                    });
                                   },
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
@@ -161,13 +180,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                         borderRadius:
                                             BorderRadius.circular(15)),
                                     alignment: Alignment.center,
-                                    child: const Text(
-                                      'ĐĂNG NHẬP',
-                                      style: TextStyle(
-                                          fontFamily: 'CeraPro',
-                                          fontSize: 16,
-                                          color: Colors.white),
-                                    ),
+                                    child: loading
+                                        ? const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: SizedBox(
+                                              height: 10,
+                                              width: 10,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                        : const Text(
+                                            'ĐĂNG NHẬP',
+                                            style: TextStyle(
+                                                fontFamily: 'CeraPro',
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
                                   )),
                             ),
                           ],
