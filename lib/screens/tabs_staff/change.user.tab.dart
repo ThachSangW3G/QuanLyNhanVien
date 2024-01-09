@@ -3,14 +3,14 @@ import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 
-class TimeKeeping extends StatefulWidget {
-  const TimeKeeping({super.key});
+class ChangeUser extends StatefulWidget {
+  const ChangeUser({super.key});
 
   @override
-  State<TimeKeeping> createState() => _TimeKeepingState();
+  State<ChangeUser> createState() => _TimeKeepingState();
 }
 
-class _TimeKeepingState extends State<TimeKeeping> {
+class _TimeKeepingState extends State<ChangeUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

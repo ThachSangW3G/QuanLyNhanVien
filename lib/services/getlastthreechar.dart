@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 int getLastThreeCharsAsInteger(String inputString) {
   // Sử dụng phương thức `substring` để lấy ba ký tự cuối cùng của chuỗi
   String lastThreeChars = inputString.substring(inputString.length - 3);
@@ -16,4 +18,12 @@ int getLastThreeCharsAsInteger(String inputString) {
 
   // Sử dụng phương thức `??` để xử lý giá trị mặc định nếu chuyển đổi không thành công
   return result ?? 0;
+}
+
+String changeTimestampToTime(Timestamp t) {
+  final dateTime = t.toDate();
+  final hour = dateTime.hour;
+  final minute = dateTime.minute;
+  final second = dateTime.second;
+  return '$hour:$minute:$second';
 }
