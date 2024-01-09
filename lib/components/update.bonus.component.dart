@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:quanlynhanvien/components/input.select.data.dart';
 import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
+import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
 import 'package:quanlynhanvien/models/nhanvien.model.dart';
 import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
@@ -83,8 +85,10 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
                                 .add(nhanVien.maNV + ' - ' + nhanVien.hoTen);
                             listMaNV.add(nhanVien.maNV);
                           }
+
                           final indexCurrent = listMaNV.indexOf(maNV);
-                          return InputSelect(
+                          print(listString[indexCurrent]);
+                          return InputSelectData(
                               list: listString,
                               label: 'Nhân Viên',
                               selectedOption: listString[indexCurrent],
@@ -105,12 +109,34 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
                   const SizedBox(
                     width: 45,
                   ),
-                  InputSelect(
-                      list: list,
-                      label: 'Loại Khen Thưởng',
-                      selectedOption: '',
-                      onChanged: (value) {},
-                      hinttext: '--Chọn loại khen thưởng--'),
+                  FutureBuilder<List<LoaiKhenThuong>>(
+                      future: loaiKhenThuongProvider.getAllLoaiKhenThuong(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final listLoaiKhenThuong = snapshot.data;
+                          final List<String> listString = [];
+
+                          for (LoaiKhenThuong loaikhenthuong
+                              in listLoaiKhenThuong!) {
+                            listString.add(loaikhenthuong.maLKT);
+                          }
+                          return InputSelectData(
+                              list: listString,
+                              label: 'Loại Khen Thưởng',
+                              selectedOption: maLKT,
+                              onChanged: (value) {
+                                maLKT = value;
+                              },
+                              hinttext: '--Chọn loại khen thưởng--');
+                        } else {
+                          return InputSelect(
+                              list: const [],
+                              label: 'Loại khen thưởng',
+                              selectedOption: '',
+                              onChanged: (value) {},
+                              hinttext: '--Chọn loại khen thưởng--');
+                        }
+                      }),
                 ],
               ),
               const SizedBox(
@@ -200,4 +226,4 @@ class _AddBonusComponentState extends State<UpdateBonusComponent> {
   }
 }
 
-List<String> list = ['NV001  Nguyen Trung Tinh', 'NV002 - Thach A Sang'];
+List<String> list = ['NV001-Nguyen Trung Tinh', 'NV002-Thach A Sang'];

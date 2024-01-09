@@ -213,8 +213,20 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );

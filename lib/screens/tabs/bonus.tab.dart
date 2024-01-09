@@ -403,7 +403,6 @@ class RowSource extends DataTableSource {
 }
 
 DataRow recentFileDataRow(var data, int index, BuildContext context) {
-  final khenThuong = data as KhenThuong;
   final nhanVienProvider = Provider.of<NhanVienProvider>(context);
 
   return DataRow(

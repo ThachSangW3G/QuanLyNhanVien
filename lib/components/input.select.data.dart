@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 
-class InputSelect extends StatefulWidget {
+class InputSelectData extends StatefulWidget {
   final String label;
   final String hinttext;
   final String selectedOption;
   final Function(String) onChanged;
   final List<String> list;
-  const InputSelect(
+  const InputSelectData(
       {super.key,
       required this.list,
       required this.selectedOption,
@@ -16,12 +16,17 @@ class InputSelect extends StatefulWidget {
       required this.hinttext});
 
   @override
-  State<InputSelect> createState() => _InputSelectState();
+  State<InputSelectData> createState() => _InputSelectState();
 }
 
-class _InputSelectState extends State<InputSelect> {
+class _InputSelectState extends State<InputSelectData> {
   String? value;
   String dropdownValue = 'Nam';
+  @override
+  void initState() {
+    value = widget.selectedOption;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

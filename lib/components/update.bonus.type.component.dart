@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.number.component.dart';
-import 'package:quanlynhanvien/components/input.select.component.dart';
 import 'package:quanlynhanvien/components/input.text.component.dart';
 import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
@@ -111,7 +110,9 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
                       label: 'Ngày tạo',
                       name: DateFormat('dd/MM/yyyy').format(ngayTao),
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayTao = value;
+                      }),
                 ],
               ),
               const SizedBox(
@@ -123,7 +124,9 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
                       label: 'Mô tả',
                       name: moTa,
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                 ],
               ),
             ]),

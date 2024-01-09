@@ -31,4 +31,8 @@ class KyLuatProvider extends ChangeNotifier {
     await kyLuatRepository.updKyLuat(kyLuat);
     notifyListeners();
   }
+
+  Future<KyLuat?> getLastKyLuat() {
+    return kyLuatRepository.getLastKyLuat();
+  }
 }

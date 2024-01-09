@@ -1,6 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quanlynhanvien/components/failed_snackbar.dart';
 import 'package:quanlynhanvien/components/input.select.component.dart';
+import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/kyluat.model.dart';
+import 'package:quanlynhanvien/models/loaikyluat.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/kyluat.provider.dart';
+import 'package:quanlynhanvien/providers/loaikyluat.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
 import 'input.time.component.dart';
@@ -13,8 +24,18 @@ class AddDisciplineComponent extends StatefulWidget {
 }
 
 class _AddBonusComponentState extends State<AddDisciplineComponent> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    String? maNV;
+    String? maLKL;
+    String? moTa;
+    DateTime? ngayKL;
+
+    final kyLuatProvider = Provider.of<KyLuatProvider>(context);
+    final nhanVienProvider = Provider.of<NhanVienProvider>(context);
+    final loaiKyLuatProvider = Provider.of<LoaiKyLuatProvider>(context);
+
     return AlertDialog(
       title: const Text(
         'Thêm kỷ luật',
@@ -49,21 +70,65 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
             child: Column(children: [
               Row(
                 children: [
-                  InputSelect(
-                      list: list,
-                      label: 'Nhân Viên',
-                      selectedOption: '',
-                      onChanged: (value) {},
-                      hinttext: '--Chọn nhân viên--'),
+                  FutureBuilder<List<NhanVien>>(
+                      future: nhanVienProvider.getAllNhanVien(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final listNhanVien = snapshot.data;
+                          final List<String> listString = [];
+                          for (NhanVien nhanVien in listNhanVien!) {
+                            listString
+                                .add(nhanVien.maNV + ' - ' + nhanVien.hoTen);
+                          }
+                          return InputSelect(
+                              list: listString,
+                              label: 'Nhân Viên',
+                              selectedOption: '',
+                              onChanged: (value) {
+                                final index = listString.indexOf(value);
+                                maNV = listNhanVien[index].maNV;
+                              },
+                              hinttext: '--Chọn nhân viên--');
+                        } else {
+                          return InputSelect(
+                              list: const [],
+                              label: 'Nhân Viên',
+                              selectedOption: '',
+                              onChanged: (value) {},
+                              hinttext: '--Chọn nhân viên--');
+                        }
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
-                  InputSelect(
-                      list: list,
-                      label: 'Loại Kỷ Luật',
-                      selectedOption: '',
-                      onChanged: (value) {},
-                      hinttext: '--Chọn loại kỷ luật--'),
+                  FutureBuilder<List<LoaiKyLuat>>(
+                      future: loaiKyLuatProvider.getAllLoaiKyLuat(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final listLoaiKyLuat = snapshot.data;
+                          final List<String> listString = [];
+                          for (LoaiKyLuat loaiKyLuat in listLoaiKyLuat!) {
+                            listString.add(
+                                loaiKyLuat.maLKL + ' - ' + loaiKyLuat.tenLKL);
+                          }
+                          return InputSelect(
+                              list: listString,
+                              label: 'Loại kỷ luật',
+                              selectedOption: '',
+                              onChanged: (value) {
+                                final index = listString.indexOf(value);
+                                maLKL = listLoaiKyLuat[index].maLKL;
+                              },
+                              hinttext: '--Chọn loại kỷ luật--');
+                        } else {
+                          return InputSelect(
+                              list: const [],
+                              label: 'Loại kỷ luật',
+                              selectedOption: '',
+                              onChanged: (value) {},
+                              hinttext: '--Chọn loại  kỷ luật--');
+                        }
+                      }),
                 ],
               ),
               const SizedBox(
@@ -76,7 +141,9 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
                       label: 'Mô tả',
                       name: '',
                       hinttext: '',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        moTa = value;
+                      }),
                   const SizedBox(
                     width: 45,
                   ),
@@ -84,7 +151,9 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
                       label: 'Ngày kỷ luật',
                       name: '',
                       hinttext: 'DD/MM/YYYY',
-                      onChanged: (value) {}),
+                      onChanged: (value) {
+                        ngayKL = value;
+                      }),
                 ],
               )
             ]),
@@ -103,12 +172,57 @@ class _AddBonusComponentState extends State<AddDisciplineComponent> {
               style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              setState(() {
+                loading = true;
+              });
+              KyLuat? lastiKyLuat = await kyLuatProvider.getLastKyLuat();
+
+              int soThuTu = lastiKyLuat != null
+                  ? getLastThreeCharsAsInteger(lastiKyLuat.maKL) + 1
+                  : 0;
+
+              String maKL = 'KT' + soThuTu.toString().padLeft(3, '0');
+
+              final kyLuat = KyLuat(
+                  maKL: maKL,
+                  maNV: maNV!,
+                  maLKL: maLKL!,
+                  moTa: moTa!,
+                  ngayKL: Timestamp.fromDate(ngayKL!));
+
+              await kyLuatProvider.addKyLuat(kyLuat);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                  buildSuccessSnackbar('Thêm ky luật thành công!'));
+            } catch (e) {
+              print(e);
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(buildFailedSnackbar('Thêm kỷ luật thất bại!'));
+            }
+            setState(() {
+              loading = false;
+            });
+            Navigator.pop(context);
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.bluedarkColor,
           ),
-          child: const Text('Lưu',
-              style: TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : const Text('Lưu',
+                  style:
+                      TextStyle(fontFamily: 'CeraPro', color: AppColors.white)),
         ),
       ],
     );
