@@ -5,6 +5,7 @@ class KyLuat {
   final String maNV;
   final String maLKL;
   final String moTa;
+  final int soTienPhat;
   final Timestamp ngayKL;
 
   KyLuat(
@@ -12,6 +13,7 @@ class KyLuat {
       required this.maNV,
       required this.maLKL,
       required this.moTa,
+      required this.soTienPhat,
       required this.ngayKL});
 
   factory KyLuat.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class KyLuat {
         maNV: json['maNV'] ?? '',
         maLKL: json['maLKL'] ?? '',
         moTa: json['moTa'] ?? '',
+        soTienPhat: json['soTienPhat'],
         ngayKL: json['ngayKL']);
   }
   Map<String, dynamic> toJson() {
@@ -28,32 +31,33 @@ class KyLuat {
       'maNV': maNV,
       'maLKL': maLKL,
       'moTa': moTa,
-      'ngayKL': ngayKL
+      'ngayKL': ngayKL,
+      'soTienPhat': soTienPhat
     };
   }
 }
 
-List<KyLuat> danhSachKyLuat = [
-  KyLuat(
-    maKL: 'KL001',
-    maNV: 'NV001',
-    maLKL: 'LKL001',
-    moTa: 'Lỗi vi phạm nội quy công ty',
-    ngayKL: Timestamp.fromDate(DateTime(2022, 5, 15)),
-  ),
-  KyLuat(
-    maKL: 'KL002',
-    maNV: 'NV002',
-    maLKL: 'LKL002',
-    moTa: 'Thái độ làm việc không tốt',
-    ngayKL: Timestamp.fromDate(DateTime(2022, 7, 20)),
-  ),
-  KyLuat(
-    maKL: 'KL003',
-    maNV: 'NV003',
-    maLKL: 'LKL001',
-    moTa: 'Lỗi vi phạm nội quy công ty',
-    ngayKL: Timestamp.fromDate(DateTime(2023, 2, 10)),
-  ),
-  // Thêm các phần tử khác vào đây
-];
+// List<KyLuat> danhSachKyLuat = [
+//   KyLuat(
+//     maKL: 'KL001',
+//     maNV: 'NV001',
+//     maLKL: 'LKL001',
+//     moTa: 'Lỗi vi phạm nội quy công ty',
+//     ngayKL: Timestamp.fromDate(DateTime(2022, 5, 15)),
+//   ),
+//   KyLuat(
+//     maKL: 'KL002',
+//     maNV: 'NV002',
+//     maLKL: 'LKL002',
+//     moTa: 'Thái độ làm việc không tốt',
+//     ngayKL: Timestamp.fromDate(DateTime(2022, 7, 20)),
+//   ),
+//   KyLuat(
+//     maKL: 'KL003',
+//     maNV: 'NV003',
+//     maLKL: 'LKL001',
+//     moTa: 'Lỗi vi phạm nội quy công ty',
+//     ngayKL: Timestamp.fromDate(DateTime(2023, 2, 10)),
+//   ),
+//   // Thêm các phần tử khác vào đây
+// ];

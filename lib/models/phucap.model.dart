@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class PhuCap {
   final String maPC;
   final String maNV;
-  final String maLPC;
   final String moTa;
   final int soTien;
   final Timestamp ngayPC;
@@ -11,7 +10,6 @@ class PhuCap {
   PhuCap({
     required this.maPC,
     required this.maNV,
-    required this.maLPC,
     required this.moTa,
     required this.soTien,
     required this.ngayPC,
@@ -21,9 +19,9 @@ class PhuCap {
     return {
       'maPC': maPC,
       'maNV': maNV,
-      'maLPC': maLPC,
       'moTa': moTa,
       'ngayPC': ngayPC,
+      'soTien': soTien
     };
   }
 
@@ -32,7 +30,6 @@ class PhuCap {
       maPC: json['maPC'],
       maNV: json['maNV'],
       soTien: json['soTien'],
-      maLPC: json['maLPC'],
       moTa: json['moTa'],
       ngayPC: json['ngayPC'],
     );
@@ -43,7 +40,6 @@ List<PhuCap> listphuCap = [
   PhuCap(
     maPC: 'PC001',
     maNV: 'NV001',
-    maLPC: 'LPC001',
     soTien: 1000000,
     moTa: 'Phụ cấp chức vụ',
     ngayPC: Timestamp.now(),
@@ -51,7 +47,6 @@ List<PhuCap> listphuCap = [
   PhuCap(
     maPC: 'PC002',
     maNV: 'NV001',
-    maLPC: 'LPC001',
     soTien: 1000000,
     moTa: 'Phụ cấp chức vụ',
     ngayPC: Timestamp.now(),
@@ -60,7 +55,6 @@ List<PhuCap> listphuCap = [
     maPC: 'PC003',
     maNV: 'NV001',
     soTien: 1000000,
-    maLPC: 'LPC001',
     moTa: 'Phụ cấp chức vụ',
     ngayPC: Timestamp.now(),
   ),

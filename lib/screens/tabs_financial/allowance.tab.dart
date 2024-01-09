@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/add.allowance.component.dart';
 import 'package:quanlynhanvien/components/update.allowance.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/phucap.model.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phucap.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -18,6 +21,8 @@ class AllowanceTab extends StatefulWidget {
 class _AllowanceTabState extends State<AllowanceTab> {
   @override
   Widget build(BuildContext context) {
+    final phuCapProvider = Provider.of<PhuCapProvider>(context);
+
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -116,69 +121,73 @@ class _AllowanceTabState extends State<AllowanceTab> {
                     const SizedBox(
                       height: 10,
                     ),
-                    PaginatedDataTable(
-                      source: RowSource(
-                          myData: listphuCap,
-                          count: listphuCap.length,
-                          context: context),
-                      rowsPerPage: 5,
-                      columnSpacing: 50,
-                      columns: [
-                        DataColumn(
-                            label: const Text(
-                              "STT",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        DataColumn(
-                            label: const Text(
-                              "Mã Nhân Viên",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: Text(
-                            "Tên Nhân Viên",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        DataColumn(
-                            label: const Text(
-                              "Số tiền phụ cấp",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                            onSort: (columnIndex, ascending) {}),
-                        const DataColumn(
-                          label: SizedBox(
-                            width: 100,
-                            // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                            child: Text(
-                              "Ngày phụ cấp",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Mô tả",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Text(
-                            "Thao tác",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
+                    FutureBuilder<List<PhuCap>>(
+                        future: phuCapProvider.getAllPhuCap(),
+                        builder: (context, snapshot) {
+                          final listPhuCap = snapshot.data;
+                          return PaginatedDataTable(
+                            source: RowSource(
+                                myData: listPhuCap,
+                                count: listPhuCap?.length ?? 0,
+                                context: context),
+                            rowsPerPage: 5,
+                            columnSpacing: 80,
+                            columns: [
+                              DataColumn(
+                                  label: const Text(
+                                    "STT",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              DataColumn(
+                                  label: const Text(
+                                    "Mã Nhân Viên",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: Text(
+                                  "Tên Nhân Viên",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                              DataColumn(
+                                  label: const Text(
+                                    "Số tiền phụ cấp",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                  onSort: (columnIndex, ascending) {}),
+                              const DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                  child: Text(
+                                    "Ngày phụ cấp",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const DataColumn(
+                                label: Text(
+                                  "Mô tả",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -216,7 +225,6 @@ class RowSource extends DataTableSource {
 }
 
 DataRow recentFileDataRow(var data, int index, BuildContext context) {
-  final loaikhenThuong = data as PhuCap;
   return DataRow(
     cells: [
       DataCell(Text((index + 1).toString())),
@@ -225,24 +233,6 @@ DataRow recentFileDataRow(var data, int index, BuildContext context) {
       DataCell(Text(data.soTien.toString())),
       DataCell(Text(DateFormat('dd/MM/yyyy').format(data.ngayPC.toDate()))),
       const DataCell(Text('Mô tả')),
-      DataCell(Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.mode_edit_outlined),
-            onPressed: () {
-              showDialog(
-                  context: _scaffoldKey.currentContext!,
-                  builder: (scaffoldKey) {
-                    return const UpdateAllowanceComponent();
-                  });
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {},
-          )
-        ],
-      )),
     ],
   );
 }

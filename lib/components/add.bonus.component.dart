@@ -8,9 +8,12 @@ import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/khenthuong.model.dart';
 import 'package:quanlynhanvien/models/loaikhenthuong.model.dart';
 import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/models/phucap.model.dart';
 import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
+import 'package:quanlynhanvien/providers/phieuluong.provider.dart';
+import 'package:quanlynhanvien/providers/phucap.provider.dart';
 import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 import 'input.text.multiline.component.dart';
@@ -32,10 +35,12 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
     String? maLKT;
     String? moTa;
     DateTime? ngayKT;
+    int? soTienThuong;
 
     final khenThuongProvider = Provider.of<KhenThuongProvider>(context);
     final nhanVienProvider = Provider.of<NhanVienProvider>(context);
     final loaiKhenThuongProvider = Provider.of<LoaiKhenThuongProvider>(context);
+    final phieuLuongProvider = Provider.of<PhieuLuongProvider>(context);
 
     return AlertDialog(
       title: const Text(
@@ -121,6 +126,8 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
                               onChanged: (value) {
                                 final index = listString.indexOf(value);
                                 maLKT = listLoaiKhenThuong[index].maLKT;
+                                soTienThuong =
+                                    listLoaiKhenThuong[index].soTienThuong;
                               },
                               hinttext: '--Chọn loại khen thưởng--');
                         } else {
@@ -194,9 +201,17 @@ class _AddBonusComponentState extends State<AddBonusComponent> {
                   maNV: maNV!,
                   maLKT: maLKT!,
                   moTa: moTa!,
+                  soTienThuong: soTienThuong!,
                   ngayKT: Timestamp.fromDate(ngayKT!));
 
               await khenThuongProvider.addKhenThuong(khenThuong);
+
+              final phieuLuong = await phieuLuongProvider
+                  .getPhieuLuong('PL${ngayKT!.month}-${ngayKT!.year}-${maNV}');
+
+              phieuLuong.khenThuong += soTienThuong!;
+
+              await phieuLuongProvider.updPhieuLuong(phieuLuong);
 
               ScaffoldMessenger.of(context).showSnackBar(
                   buildSuccessSnackbar('Thêm khen thưởng thành công!'));

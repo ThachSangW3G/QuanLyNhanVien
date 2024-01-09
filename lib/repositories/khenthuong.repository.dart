@@ -8,6 +8,7 @@ abstract class KhenThuongRepository {
   Future<void> delKhenThuong(String maKT);
   Future<void> updKhenThuong(KhenThuong khenThuong);
   Future<KhenThuong?> getLastKhenThuong();
+  Future<int> getTongTienThuong(String maNV, DateTime specificDate);
 }
 
 class KhenThuongRepositoryImpl implements KhenThuongRepository {
@@ -72,5 +73,41 @@ class KhenThuongRepositoryImpl implements KhenThuongRepository {
     });
 
     return Future.value(listLKT[0]);
+  }
+
+  @override
+  Future<int> getTongTienThuong(String maNV, DateTime specificDate) async {
+    try {
+      Timestamp startTimestamp = Timestamp.fromDate(DateTime(specificDate.year,
+          specificDate.month, specificDate.day, 0, 0, 0, 0, 0));
+      Timestamp endTimestamp = Timestamp.fromDate(DateTime(specificDate.year,
+          specificDate.month, specificDate.day, 23, 59, 59, 999, 999));
+
+      final listKhenThuong = await khenThuongs
+          .where('ngayKT', isGreaterThanOrEqualTo: startTimestamp)
+          .where('ngayKT', isLessThanOrEqualTo: endTimestamp)
+          .where('maNV', isEqualTo: maNV)
+          .orderBy('ngayKT', descending: false)
+          .get();
+      int tongTien = 0;
+      List<KhenThuong> listLKT = [];
+      listKhenThuong.docs.forEach((award) {
+        listLKT.add(KhenThuong.fromJson(award.data() as Map<String, dynamic>));
+      });
+      listLKT.forEach((element) {
+        tongTien += element.soTienThuong;
+      });
+
+      return Future.value(tongTien);
+    } catch (e) {
+      print(e);
+      return Future.value(0);
+    }
+  }
+
+  List<KhenThuong> _recipeListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) => KhenThuong.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 }

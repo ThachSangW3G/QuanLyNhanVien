@@ -18,7 +18,7 @@ class ChucVuProvider extends ChangeNotifier {
     return await chucVuRepository.getAllChucVu();
   }
 
-  Future<ChucVu> getChucVu(String maCV) async {
+  Future<ChucVu?> getChucVu(String maCV) async {
     return await chucVuRepository.getChucVu(maCV);
   }
 
