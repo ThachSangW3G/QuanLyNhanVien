@@ -35,7 +35,7 @@ class _AddBonusComponentState extends State<UpdateDisciplineTypeComponent> {
 
     return AlertDialog(
       title: const Text(
-        'Thêm loại kỷ luật',
+        'Cập nhật loại kỷ luật',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),

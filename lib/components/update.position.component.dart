@@ -27,7 +27,7 @@ class _AddPhongBanState extends State<UpdatePositionComponent> {
     final chucVuProvider = Provider.of<ChucVuProvider>(context);
     return AlertDialog(
       title: const Text(
-        'Thêm Chức Vụ',
+        'Cập Nhật Chức Vụ',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),

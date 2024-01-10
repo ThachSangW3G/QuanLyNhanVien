@@ -36,7 +36,7 @@ class _AddBonusComponentState extends State<UpdateBonusTypeComponent> {
 
     return AlertDialog(
       title: const Text(
-        'Thêm loại khen thưởng',
+        'Cập loại khen thưởng',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),

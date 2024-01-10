@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quanlynhanvien/constants/app_colors.dart';
 
 class OverviewTab extends StatelessWidget {
   const OverviewTab({super.key});
@@ -7,9 +8,12 @@ class OverviewTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            color: Colors.green,
+            color: AppColors.bluedarkColor,
             child: const Center(
-              child: Text("Overview"),
+              child: Text(
+                "Chào mừng trở lại",
+                style: TextStyle(color: Colors.white),
+              ),
             )));
   }
 }

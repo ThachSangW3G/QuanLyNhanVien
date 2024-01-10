@@ -19,7 +19,7 @@ class _AddBonusComponentState extends State<UpdateDisciplineComponent> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text(
-        'Thêm kỷ luật',
+        'Cập nhật kỷ luật',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),
