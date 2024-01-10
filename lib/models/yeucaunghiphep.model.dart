@@ -7,8 +7,8 @@ class YeuCauNghiPhep {
   final Timestamp ngayKetThuc;
   final String lyDo;
   String trangThai;
-  Timestamp ngayDuyet;
-  String nguoiDuyet;
+  Timestamp? ngayDuyet;
+  String? nguoiDuyet;
 
   YeuCauNghiPhep(
       {required this.maYCNP,

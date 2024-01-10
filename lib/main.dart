@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/providers/chamcong.provider.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
+import 'package:quanlynhanvien/providers/hopdonglaodong.provider.dart';
 import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/kyluat.provider.dart';
 import 'package:quanlynhanvien/providers/loaikhenthuong.provider.dart';
@@ -38,7 +39,8 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => ChamCongProvider()),
       ChangeNotifierProvider(create: (_) => PhieuLuongProvider()),
       ChangeNotifierProvider(create: (_) => PhieuLuongChinhThucProvider()),
-      ChangeNotifierProvider(create: (_) => PhuCapProvider())
+      ChangeNotifierProvider(create: (_) => PhuCapProvider()),
+      ChangeNotifierProvider(create: (_) => HopDongLaoDongProvider())
     ],
     child: MyApp(),
   ));

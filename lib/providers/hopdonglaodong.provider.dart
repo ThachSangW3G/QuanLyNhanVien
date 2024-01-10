@@ -9,7 +9,7 @@ class HopDongLaoDongProvider extends ChangeNotifier {
     hopDongLaoDongRepository = HopDongLaoDongRepositoryImpl();
   }
 
-  Future<void> addChucVu(HopDongLaoDong hopDongLaoDong) async {
+  Future<void> addHopDongLaoDong(HopDongLaoDong hopDongLaoDong) async {
     await hopDongLaoDongRepository.addHopDongLapDong(hopDongLaoDong);
     notifyListeners();
   }
@@ -30,5 +30,13 @@ class HopDongLaoDongProvider extends ChangeNotifier {
   Future<void> updHopDongLaoDong(HopDongLaoDong hopDongLaoDong) async {
     await hopDongLaoDongRepository.updHopDongLaoDong(hopDongLaoDong);
     notifyListeners();
+  }
+
+  Future<HopDongLaoDong?> getLastHopDongLaoDong() {
+    return hopDongLaoDongRepository.getLastHopDongLaoDong();
+  }
+
+  Future<HopDongLaoDong> getHopDongLaoDongByMaNV(String maNV) {
+    return hopDongLaoDongRepository.getHopDongLaoDongByMaNV(maNV);
   }
 }

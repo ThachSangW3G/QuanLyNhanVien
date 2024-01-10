@@ -31,4 +31,12 @@ class YeuCauNghiPhepProvider extends ChangeNotifier {
     await yeuCauNghiPhepRepository.updYeuCauNghiPhep(yeuCauNghiPhep);
     notifyListeners();
   }
+
+  Stream<List<YeuCauNghiPhep>> getAllYeuCauNghiPhepByMaNV(String maNV) {
+    return yeuCauNghiPhepRepository.getAllYeuCauNghiPhepByMaNV(maNV);
+  }
+
+  Future<YeuCauNghiPhep?> getLastYeuCauNghiPhep() {
+    return yeuCauNghiPhepRepository.getLastYeuCauNghiPhep();
+  }
 }

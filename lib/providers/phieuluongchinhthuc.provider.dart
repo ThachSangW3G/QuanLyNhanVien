@@ -40,4 +40,8 @@ class PhieuLuongChinhThucProvider extends ChangeNotifier {
       DateTime specificDate) async {
     return await phieuLuongRepository.getPhieuLuongByThangNam(specificDate);
   }
+
+  Future<List<PhieuLuongChinhThuc>> getAllPhieuLuongByMaNV(String maNV) {
+    return phieuLuongRepository.getAllPhieuLuongByMaNV(maNV);
+  }
 }

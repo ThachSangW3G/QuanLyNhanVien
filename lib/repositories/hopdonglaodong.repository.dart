@@ -7,6 +7,8 @@ abstract class HopDongLaoDongRepository {
   Future<HopDongLaoDong> getHopDongLaoDong(String maHD);
   Future<void> delHopDongLaoDong(String maHD);
   Future<void> updHopDongLaoDong(HopDongLaoDong hopDongLaoDong);
+  Future<HopDongLaoDong?> getLastHopDongLaoDong();
+  Future<HopDongLaoDong> getHopDongLaoDongByMaNV(String maNV);
 }
 
 class HopDongLaoDongRepositoryImpl implements HopDongLaoDongRepository {
@@ -51,10 +53,42 @@ class HopDongLaoDongRepositoryImpl implements HopDongLaoDongRepository {
   }
 
   @override
+  Future<HopDongLaoDong> getHopDongLaoDongByMaNV(String maNV) async {
+    List<HopDongLaoDong> listLKT = [];
+    await hopDongLaoDongs
+        .where('maNV', isEqualTo: maNV)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT
+            .add(HopDongLaoDong.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
+  }
+
+  @override
   Future<void> updHopDongLaoDong(HopDongLaoDong hopDongLaoDong) {
     return hopDongLaoDongs
         .doc(hopDongLaoDong.maHD)
         .update(hopDongLaoDong.toJson())
         .then((value) => print('update hopDongLaoDong succcessfully'));
+  }
+
+  @override
+  Future<HopDongLaoDong?> getLastHopDongLaoDong() async {
+    List<HopDongLaoDong> listLKT = [];
+    await hopDongLaoDongs
+        .orderBy('maHD', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT
+            .add(HopDongLaoDong.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
   }
 }

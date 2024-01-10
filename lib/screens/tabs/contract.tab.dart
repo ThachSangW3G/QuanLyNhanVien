@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/add.contract.component.dart';
 import 'package:quanlynhanvien/components/update.contract.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/hopdonglaodong.model.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/hopdonglaodong.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -14,6 +18,7 @@ class ConstactTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hopDongLaoDongProvider = Provider.of<HopDongLaoDongProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: SingleChildScrollView(
@@ -93,62 +98,84 @@ class ConstactTab extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PaginatedDataTable(
-                  source: RowSource(myData: listHDLD, count: listHDLD.length),
-                  rowsPerPage: 10,
-                  columnSpacing: 90,
-                  columns: [
-                    DataColumn(
-                        label: const Text(
-                          "STT",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
-                        ),
-                        onSort: (columnIndex, ascending) {}),
-                    DataColumn(
-                        label: const Text(
-                          "Mã HĐLĐ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
-                        ),
-                        onSort: (columnIndex, ascending) {}),
-                    DataColumn(
-                        label: const Text(
-                          "Mã Nhân viên",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 14),
-                        ),
-                        onSort: (columnIndex, ascending) {}),
-                    const DataColumn(
-                      label: Text(
-                        "Ngày bắt đầu",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14),
-                      ),
-                    ),
-                    const DataColumn(
-                      label: Text(
-                        "Ngày kết thúc",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14),
-                      ),
-                    ),
-                    const DataColumn(
-                      label: Text(
-                        "Lương cơ bản",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14),
-                      ),
-                    ),
-                    const DataColumn(
-                      label: Text(
-                        "Thao tác",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
+                child: FutureBuilder<List<HopDongLaoDong>>(
+                    future: hopDongLaoDongProvider.getAllHopDongLaoDong(),
+                    builder: (context, snapshot) {
+                      final listHDLD = snapshot.data;
+                      return PaginatedDataTable(
+                        source: RowSource(
+                            myData: listHDLD,
+                            count: listHDLD?.length ?? 0,
+                            context: context),
+                        rowsPerPage: 10,
+                        columnSpacing: 90,
+                        columns: [
+                          DataColumn(
+                              label: const Text(
+                                "STT",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                              onSort: (columnIndex, ascending) {}),
+                          DataColumn(
+                              label: const Text(
+                                "Mã HĐLĐ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                              onSort: (columnIndex, ascending) {}),
+                          DataColumn(
+                              label: const Text(
+                                "Mã Nhân viên",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                              onSort: (columnIndex, ascending) {}),
+                          DataColumn(
+                              label: const Text(
+                                "Tên Nhân viên",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                              onSort: (columnIndex, ascending) {}),
+                          const DataColumn(
+                            label: Text(
+                              "Ngày bắt đầu",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                          const DataColumn(
+                            label: Text(
+                              "Ngày kết thúc",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                          const DataColumn(
+                            label: Text(
+                              "Lương cơ bản",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                          const DataColumn(
+                            label: Text(
+                              "Hệ số lương",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                          const DataColumn(
+                            label: Text(
+                              "Thao tác",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
               ),
             ],
           ),
@@ -159,15 +186,13 @@ class ConstactTab extends StatelessWidget {
 class RowSource extends DataTableSource {
   var myData;
   final count;
-  RowSource({
-    required this.myData,
-    required this.count,
-  });
+  final BuildContext context;
+  RowSource({required this.myData, required this.count, required this.context});
 
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index, context);
     } else
       return null;
   }
@@ -182,24 +207,37 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
+DataRow recentFileDataRow(var data, int index, BuildContext context) {
   DateTime dtBatDau = (data.ngayBatDau as Timestamp).toDate();
   DateTime dtKetThuc = (data.ngayKetThuc as Timestamp).toDate();
+  final nhanVienProvider = Provider.of<NhanVienProvider>(context);
   final hdld = data as HopDongLaoDong;
   return DataRow(
     cells: [
-      DataCell(Text((listHDLD.indexOf(hdld) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(data.maHD.toString())),
       DataCell(Text(data.maNV.toString())),
+      DataCell(FutureBuilder<NhanVien>(
+          future: nhanVienProvider.getNhanVien(data.maNV),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final nhanVien = snapshot.data;
+              return Text(nhanVien!.hoTen);
+            }
+            return Text('');
+          })),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(dtBatDau))),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(dtKetThuc))),
       DataCell(Text(data.luongCoBan.toString())),
+      DataCell(Text(data.heSoLuong.toString())),
       DataCell(ElevatedButton(
         onPressed: () {
           showDialog(
               context: _scaffoldKey.currentContext!,
               builder: (builder) {
-                return const UpdateConTractComponent();
+                return UpdateConTractComponent(
+                  maNV: data.maNV,
+                );
               });
         },
         style:
