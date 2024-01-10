@@ -10,9 +10,7 @@ class Flurorouter {
 
   static final Handler _loginHandler = Handler(
       handlerFunc: (BuildContext? context, Map<String, dynamic> params) =>
-          const FinancialScreen(
-            page: 'allowance',
-          ));
+          const LoginScreen());
 
   static final Handler _managerStaffHandler = Handler(
       handlerFunc: (BuildContext? context, Map<String, dynamic> params) =>
