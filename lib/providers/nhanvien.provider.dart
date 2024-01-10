@@ -31,4 +31,8 @@ class NhanVienProvider extends ChangeNotifier {
     await nhanVienRepository.updNhanVien(nhanVien);
     notifyListeners();
   }
+
+  Future<NhanVien?> getLastNhanVien() {
+    return nhanVienRepository.getLastNhanVien();
+  }
 }

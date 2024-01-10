@@ -31,4 +31,8 @@ class PhongBanProvider extends ChangeNotifier {
     await phongBanRepository.updPhongBan(phongBan);
     notifyListeners();
   }
+
+  Future<PhongBan?> getLastNhanVien() {
+    return phongBanRepository.getLastNhanVien();
+  }
 }

@@ -7,6 +7,7 @@ import 'package:quanlynhanvien/components/success_snackbar.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/chucvu.model.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 class AddPositionComponent extends StatefulWidget {
   const AddPositionComponent({super.key});
@@ -16,7 +17,6 @@ class AddPositionComponent extends StatefulWidget {
 }
 
 class _AddPhongBanState extends State<AddPositionComponent> {
-  String? maCV;
   String? tenCV;
   String? moTa;
 
@@ -60,17 +60,6 @@ class _AddPhongBanState extends State<AddPositionComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã chức vụ',
-                      name: '',
-                      isRequired: true,
-                      hinttext: '',
-                      onChanged: (valua) {
-                        maCV = valua;
-                      }),
-                  const SizedBox(
-                    width: 45,
-                  ),
-                  InputTextField(
                       label: 'Tên chức vụ',
                       name: '',
                       isRequired: true,
@@ -113,7 +102,15 @@ class _AddPhongBanState extends State<AddPositionComponent> {
         ElevatedButton(
           onPressed: () async {
             try {
-              final chucVu = ChucVu(maCV: maCV!, tenCV: tenCV!, moTa: moTa!);
+              ChucVu? lastCHucVu = await chucVuProvider.getLastChucVu();
+
+              int soThuTu = lastCHucVu != null
+                  ? getLastThreeCharsAsInteger(lastCHucVu.maCV) + 1
+                  : 0;
+
+              String maCV = 'CV' + soThuTu.toString().padLeft(3, '0');
+
+              final chucVu = ChucVu(maCV: maCV, tenCV: tenCV!, moTa: moTa!);
               setState(() {
                 loading = true;
               });

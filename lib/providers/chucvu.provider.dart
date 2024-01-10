@@ -31,4 +31,8 @@ class ChucVuProvider extends ChangeNotifier {
     await chucVuRepository.updChucVu(chucVu);
     notifyListeners();
   }
+
+  Future<ChucVu?> getLastChucVu() {
+    return chucVuRepository.getLastChucVu();
+  }
 }

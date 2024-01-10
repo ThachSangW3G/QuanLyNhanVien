@@ -7,6 +7,7 @@ abstract class ChucVuRepository {
   Future<ChucVu?> getChucVu(String maCV);
   Future<void> delChucVu(String maCV);
   Future<void> updChucVu(ChucVu chucVu);
+  Future<ChucVu?> getLastChucVu();
 }
 
 class ChucVuRepositoryImpl implements ChucVuRepository {
@@ -55,5 +56,20 @@ class ChucVuRepositoryImpl implements ChucVuRepository {
         .doc(chucVu.maCV)
         .update(chucVu.toJson())
         .then((value) => print('update ChucVu succcessfully'));
+  }
+
+  @override
+  Future<ChucVu?> getLastChucVu() async {
+    List<ChucVu> listLKT = [];
+    await chucVus
+        .orderBy('maCV', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT.add(ChucVu.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
   }
 }
