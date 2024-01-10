@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/request.rest.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/yeucaunghiphep.model.dart';
+import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
+import 'package:quanlynhanvien/providers/yeucaunghiphep.provider.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -16,6 +19,8 @@ class RestTab extends StatefulWidget {
 class _RestTabState extends State<RestTab> {
   @override
   Widget build(BuildContext context) {
+    final nguoiDungProvider = Provider.of<NguoiDungProvider>(context);
+    final yeuCauNghiPhepProvider = Provider.of<YeuCauNghiPhepProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -73,61 +78,74 @@ class _RestTabState extends State<RestTab> {
                       const SizedBox(
                         height: 20,
                       ),
-                      PaginatedDataTable(
-                        source: RowSource(
-                            myData: listYeuCauNghiPhep,
-                            count: listYeuCauNghiPhep.length),
-                        rowsPerPage: 10,
-                        columnSpacing: 50,
-                        columns: [
-                          DataColumn(
-                              label: const Text(
-                                "STT",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14),
-                              ),
-                              onSort: (columnIndex, ascending) {}),
-                          DataColumn(
-                              label: const Text(
-                                "Lý do",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14),
-                              ),
-                              onSort: (columnIndex, ascending) {}),
-                          const DataColumn(
-                            label: Text(
-                              "Ngày bắt đầu",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                          const DataColumn(
-                            label: SizedBox(
-                              width: 100,
-                              // Kích thước tương đối của cột (30% chiều rộng màn hình)
-                              child: Text(
-                                "Ngày kết thúc",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14),
-                              ),
-                            ),
-                          ),
-                          const DataColumn(
-                            label: Text(
-                              "Trạng thái",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                          const DataColumn(
-                            label: Text(
-                              "Ngày duyệt",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
+                      StreamBuilder<List<YeuCauNghiPhep>>(
+                          stream:
+                              yeuCauNghiPhepProvider.getAllYeuCauNghiPhepByMaNV(
+                                  nguoiDungProvider.nguoiDung!.maNV),
+                          builder: (context, snapshot) {
+                            final listYeuCauNghiPhep = snapshot.data;
+                            return PaginatedDataTable(
+                              source: RowSource(
+                                  myData: listYeuCauNghiPhep,
+                                  count: listYeuCauNghiPhep?.length ?? 0),
+                              rowsPerPage: 10,
+                              columnSpacing: 100,
+                              columns: [
+                                DataColumn(
+                                    label: const Text(
+                                      "STT",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
+                                    ),
+                                    onSort: (columnIndex, ascending) {}),
+                                DataColumn(
+                                    label: const Text(
+                                      "Lý do",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
+                                    ),
+                                    onSort: (columnIndex, ascending) {}),
+                                const DataColumn(
+                                  label: Text(
+                                    "Ngày bắt đầu",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                                const DataColumn(
+                                  label: SizedBox(
+                                    width: 100,
+                                    // Kích thước tương đối của cột (30% chiều rộng màn hình)
+                                    child: Text(
+                                      "Ngày kết thúc",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
+                                    ),
+                                  ),
+                                ),
+                                const DataColumn(
+                                  label: Text(
+                                    "Trạng thái",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                                const DataColumn(
+                                  label: Text(
+                                    "Ngày duyệt",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                     ]),
               ),
               SizedBox(
@@ -152,7 +170,7 @@ class RowSource extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     if (index < rowCount) {
-      return recentFileDataRow(myData![index]);
+      return recentFileDataRow(myData![index], index);
     } else {
       return null;
     }
@@ -168,11 +186,11 @@ class RowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-DataRow recentFileDataRow(var data) {
+DataRow recentFileDataRow(var data, int index) {
   final khenThuong = data as YeuCauNghiPhep;
   return DataRow(
     cells: [
-      DataCell(Text((listYeuCauNghiPhep.indexOf(khenThuong) + 1).toString())),
+      DataCell(Text((index + 1).toString())),
       DataCell(Text(data.lyDo.toString())),
       DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayBatDau.toDate()))),
       DataCell(
@@ -199,7 +217,9 @@ DataRow recentFileDataRow(var data) {
         )
       else
         const DataCell(Text('Đã gửi')),
-      DataCell(Text(DateFormat('MM/dd/yyyy').format(data.ngayDuyet.toDate()))),
+      DataCell(Text(data.ngayDuyet != null
+          ? DateFormat('MM/dd/yyyy').format(data.ngayDuyet!.toDate())
+          : 'Đợi duyệt')),
     ],
   );
 }
