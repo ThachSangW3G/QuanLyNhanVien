@@ -30,7 +30,7 @@ class _AddPhongBanState extends State<UpdateDepartmentComponent> {
     final phongBanProvider = Provider.of<PhongBanProvider>(context);
     return AlertDialog(
       title: const Text(
-        'Thêm Phòng Ban',
+        'Cập Nhật Phòng Ban',
         style: TextStyle(
           fontFamily: 'CeraPro',
         ),
