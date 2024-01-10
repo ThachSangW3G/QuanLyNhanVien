@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quanlynhanvien/components/button_component.dart';
 import 'package:quanlynhanvien/components/header_component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
+import 'package:quanlynhanvien/models/nhanvien.model.dart';
+import 'package:quanlynhanvien/providers/nguoidung.provider.dart';
+import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/screens/staff_screen.dart';
 import 'package:quanlynhanvien/screens/tabs/staff.tab.dart';
 import 'package:quanlynhanvien/screens/tabs/bonus.tab.dart';
@@ -48,6 +52,9 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
   @override
   Widget build(BuildContext context) {
     tabs = pages.indexOf(widget.page);
+    final nguoiDungProvider = Provider.of<NguoiDungProvider>(context);
+    final nhanVien = Provider.of<NhanVienProvider>(context)
+        .getNhanVien(nguoiDungProvider.nguoiDung!.maNV);
     if (widget.page == 'Staff' ||
         widget.page == 'AddStaff' ||
         widget.page == 'Department' ||
@@ -64,9 +71,9 @@ class _ManagerStaffScreenState extends State<ManagerStaffScreen> {
           ),
           child: Column(
             children: [
-              const HeaderComponent(
+              HeaderComponent(
                   name: 'Nguyễn Trung Tính',
-                  email: 'trungtinh1620@gmail.com',
+                  email: nguoiDungProvider.nguoiDung!.tenDangNhap,
                   avatar: 'assets/images/avatar.jpg'),
               Row(children: [
                 Container(

@@ -7,6 +7,7 @@ import 'package:quanlynhanvien/components/input.time.component.dart';
 import 'package:quanlynhanvien/constants/app_colors.dart';
 import 'package:quanlynhanvien/models/phongban.model.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 class AddDepartmentComponent extends StatefulWidget {
   const AddDepartmentComponent({super.key});
@@ -16,7 +17,6 @@ class AddDepartmentComponent extends StatefulWidget {
 }
 
 class _AddPhongBanState extends State<AddDepartmentComponent> {
-  String? maPB;
   String? tenPB;
   DateTime? ngayThanhLap;
   String? moTa;
@@ -117,17 +117,6 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
               Row(
                 children: [
                   InputTextField(
-                      label: 'Mã phòng ban',
-                      name: '',
-                      isRequired: true,
-                      hinttext: 'Nhập mã phòng ban',
-                      onChanged: (value) {
-                        maPB = value;
-                      }),
-                  const SizedBox(
-                    width: 45,
-                  ),
-                  InputTextField(
                       label: 'Tên phòng ban',
                       name: '',
                       isRequired: true,
@@ -180,8 +169,15 @@ class _AddPhongBanState extends State<AddDepartmentComponent> {
         ElevatedButton(
           onPressed: () async {
             try {
+              PhongBan? lastNhanVien = await phongBanProvider.getLastNhanVien();
+
+              int soThuTu = lastNhanVien != null
+                  ? getLastThreeCharsAsInteger(lastNhanVien.maPB) + 1
+                  : 0;
+
+              String maNV = 'PB' + soThuTu.toString().padLeft(3, '0');
               final phongBan = PhongBan(
-                  maPB: maPB!,
+                  maPB: maNV,
                   tenPB: tenPB!,
                   ngayThanhLap: Timestamp.fromDate(ngayThanhLap!),
                   moTa: moTa!);

@@ -7,6 +7,7 @@ abstract class PhongBanRepository {
   Future<PhongBan> getPhongBan(String maPB);
   Future<void> delPhongBan(String maPB);
   Future<void> updPhongBan(PhongBan phongBan);
+  Future<PhongBan?> getLastNhanVien();
 }
 
 class PhongBanRepositoryImpl implements PhongBanRepository {
@@ -55,5 +56,20 @@ class PhongBanRepositoryImpl implements PhongBanRepository {
         .doc(phongBan.maPB)
         .update(phongBan.toJson())
         .then((value) => print('update PhongBan succcessfully'));
+  }
+
+  @override
+  Future<PhongBan?> getLastNhanVien() async {
+    List<PhongBan> listLKT = [];
+    await phongBans
+        .orderBy('maPB', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT.add(PhongBan.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
   }
 }

@@ -16,6 +16,7 @@ import 'package:quanlynhanvien/providers/chucvu.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/providers/phongban.provider.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firabase_storage;
+import 'package:quanlynhanvien/services/getlastthreechar.dart';
 
 class AddStaffTab extends StatefulWidget {
   const AddStaffTab({super.key});
@@ -93,7 +94,6 @@ const List<String> listDanToc = <String>[
 
 class _AddStaffTabState extends State<AddStaffTab> {
   String? tenNV;
-  String? maNV;
   String? image;
   String? email;
   String? soDienThoai;
@@ -335,17 +335,6 @@ class _AddStaffTabState extends State<AddStaffTab> {
                     ),
                     Row(
                       children: [
-                        InputTextField(
-                            label: 'Mã Nhân Viên',
-                            name: '',
-                            isRequired: true,
-                            hinttext: 'NV001',
-                            onChanged: (value) {
-                              maNV = value;
-                            }),
-                        const SizedBox(
-                          width: 45,
-                        ),
                         InputTextField(
                             label: 'Họ và Tên',
                             name: '',
@@ -603,12 +592,19 @@ class _AddStaffTabState extends State<AddStaffTab> {
                         try {
                           final imageUrl = await _uploadFile();
 
-                          print(imageUrl);
+                          NhanVien? lastNhanVien =
+                              await nhanVienProvider.getLastNhanVien();
 
-                          print(11);
+                          int soThuTu = lastNhanVien != null
+                              ? getLastThreeCharsAsInteger(lastNhanVien.maNV) +
+                                  1
+                              : 0;
+
+                          String maNV =
+                              'NV' + soThuTu.toString().padLeft(3, '0');
 
                           final NhanVien nhanVien = NhanVien(
-                              maNV: maNV!,
+                              maNV: maNV,
                               hoTen: tenNV!,
                               email: email!,
                               image: imageUrl,

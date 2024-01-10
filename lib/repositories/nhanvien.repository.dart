@@ -7,6 +7,7 @@ abstract class NhanVienRepository {
   Future<NhanVien> getNhanVien(String maNV);
   Future<void> delNhanVien(String maNV);
   Future<void> updNhanVien(NhanVien nhanVien);
+  Future<NhanVien?> getLastNhanVien();
 }
 
 class NhanVienRepositoryImpl implements NhanVienRepository {
@@ -55,5 +56,20 @@ class NhanVienRepositoryImpl implements NhanVienRepository {
         .doc(nhanVien.maNV)
         .update(nhanVien.toJson())
         .then((value) => print('update NhanVien succcessfully'));
+  }
+
+  @override
+  Future<NhanVien?> getLastNhanVien() async {
+    List<NhanVien> listLKT = [];
+    await nhanViens
+        .orderBy('maNV', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listLKT.add(NhanVien.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listLKT[0]);
   }
 }
