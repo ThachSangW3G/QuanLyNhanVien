@@ -13,6 +13,7 @@ import 'package:quanlynhanvien/models/phieuluonchinhthuc.model.dart';
 import 'package:quanlynhanvien/models/phieuluong.model.dart';
 import 'package:quanlynhanvien/models/yeucaunghiphep.model.dart';
 import 'package:quanlynhanvien/providers/chucvu.provider.dart';
+import 'package:quanlynhanvien/providers/hopdonglaodong.provider.dart';
 import 'package:quanlynhanvien/providers/khenthuong.provider.dart';
 import 'package:quanlynhanvien/providers/nhanvien.provider.dart';
 import 'package:quanlynhanvien/providers/phieuluong.provider.dart';
@@ -56,6 +57,7 @@ class _ManagerWageTabState extends State<ManagerSalaryExportTab> {
     final phieuLuongChinhThucProvider =
         Provider.of<PhieuLuongChinhThucProvider>(context);
     final phieuLuongProvider = Provider.of<PhieuLuongProvider>(context);
+    final hopDongLaoDongProvider = Provider.of<HopDongLaoDongProvider>(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Padding(
@@ -86,13 +88,16 @@ class _ManagerWageTabState extends State<ManagerSalaryExportTab> {
                                 currentTime.month,
                                 currentTime.year);
 
+                        final hopDongLaoDong = await hopDongLaoDongProvider
+                            .getHopDongLaoDongByMaNV(nhanVien.maNV);
+
                         if (!checkExist) {
                           final phieuLuong = PhieuLuong(
                               maPL:
                                   'PL${currentTime.month}-${currentTime.year}-${nhanVien.maNV}',
                               maNV: nhanVien.maNV,
-                              luongCoBan: 0,
-                              heSoLuong: 0,
+                              luongCoBan: hopDongLaoDong.luongCoBan,
+                              heSoLuong: hopDongLaoDong.heSoLuong,
                               phuCap: 0,
                               khenThuong: 0,
                               kyLuat: 0,

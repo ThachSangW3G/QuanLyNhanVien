@@ -10,6 +10,7 @@ abstract class PhieuLuongChinhThucRepository {
   Future<bool> getExistPhieuLuong(String maNV, int thang, int nam);
   Future<List<PhieuLuongChinhThuc>> getPhieuLuongByThangNam(
       DateTime specificDate);
+  Future<List<PhieuLuongChinhThuc>> getAllPhieuLuongByMaNV(String maNV);
 }
 
 class PhieuLuongChinhThucRepositoryImpl
@@ -37,6 +38,22 @@ class PhieuLuongChinhThucRepositoryImpl
   Future<List<PhieuLuongChinhThuc>> getAllPhieuLuong() async {
     List<PhieuLuongChinhThuc> listPhongBan = [];
     await phieuLuongs.get().then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        listPhongBan.add(
+            PhieuLuongChinhThuc.fromJson(doc.data() as Map<String, dynamic>));
+      }
+    });
+
+    return Future.value(listPhongBan);
+  }
+
+  @override
+  Future<List<PhieuLuongChinhThuc>> getAllPhieuLuongByMaNV(String maNV) async {
+    List<PhieuLuongChinhThuc> listPhongBan = [];
+    await phieuLuongs
+        .where('maNV', isEqualTo: maNV)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         listPhongBan.add(
             PhieuLuongChinhThuc.fromJson(doc.data() as Map<String, dynamic>));
