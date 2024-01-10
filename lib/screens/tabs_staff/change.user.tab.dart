@@ -188,10 +188,24 @@ class _TimeKeepingState extends State<ChangeUser> {
                                   fontFamily: 'CeraPro',
                                   color: AppColors.white)),
                     ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.bluedarkColor),
+                        child: const Text(
+                          'Đăng xuất',
+                          style: TextStyle(color: Colors.white),
+                        )),
                   ],
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height / 30,
           ),
         ],
       ),

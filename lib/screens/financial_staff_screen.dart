@@ -7,6 +7,7 @@ import 'package:quanlynhanvien/screens/tabs_financial/manager.salaryexport.tab.d
 import 'package:quanlynhanvien/screens/tabs_financial/manager.salarytable.tab.dart';
 import 'package:quanlynhanvien/screens/tabs_financial/manager.tax.dart';
 import 'package:quanlynhanvien/screens/tabs_financial/manager.wage.tab.dart';
+import 'package:quanlynhanvien/screens/tabs_staff/change.user.tab.dart';
 
 class FinancialScreen extends StatefulWidget {
   final String page;
@@ -24,7 +25,8 @@ class _FinancialScreenState extends State<FinancialScreen> {
     'allowance',
     'managerTax',
     'salaryExport',
-    'salaryTable'
+    'salaryTable',
+    'ChangeUser'
   ];
   @override
   Widget build(BuildContext context) {
@@ -125,6 +127,21 @@ class _FinancialScreenState extends State<FinancialScreen> {
                                 context, '/financial/salaryTable');
                           },
                         ),
+                        ButtonComponent(
+                          check: tabs == 5,
+                          iconDataStart: Icons.cached,
+                          iconDataEnd: tabs == 5
+                              ? Icons.keyboard_arrow_right
+                              : Icons.keyboard_arrow_left,
+                          title: 'Thay đổi mật khẩu',
+                          onPressed: () {
+                            setState(() {
+                              tabs = 5;
+                            });
+                            Navigator.pushNamed(
+                                context, '/financial/ChangeUser');
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -139,7 +156,8 @@ class _FinancialScreenState extends State<FinancialScreen> {
                           AllowanceTab(),
                           ManagerTaxTab(),
                           ManagerSalaryExportTab(),
-                          ManagerSalaryTableTab()
+                          ManagerSalaryTableTab(),
+                          ChangeUser()
                         ],
                       )),
                 )
